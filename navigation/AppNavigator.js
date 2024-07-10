@@ -17,6 +17,7 @@ import ConsultarUsuariosScreen from '../screens/Screens_SuperAdministrador/Usuar
 
 // Importar las pantallas de Proyectos
 import CMEProyectosScreen from '../screens/Screens_SuperAdministrador/Proyectos/CMEProyectosScreen';
+import CreateProyectoScreen from '../screens/Screens_SuperAdministrador/Proyectos/CreateProjectScreen';
 import ConsultarProyectosScreen from '../screens/Screens_SuperAdministrador/Proyectos/ConsultarProyectosScreen';
 
 // Importar las pantallas de Tareas
@@ -82,6 +83,12 @@ const AppNavigator = () => {
           name="CMEProyectos"
           component={CMEProyectosScreen}
           options={{ title: 'CME Proyectos' }}
+        />
+
+        <Stack.Screen
+        name="CreateProyecto"
+        component={CreateProyectoScreen}
+        options={{ title: 'Crear Nuevo Proyecto' }}
         />
 
         <Stack.Screen
