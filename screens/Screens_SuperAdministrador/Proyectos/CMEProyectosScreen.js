@@ -23,24 +23,25 @@ const CMEProyectos = ({ navigation }) => {
       setStatus(statusData);
       setClientes(clientesData);
       setUsuarios(usuariosData);
-      setLoading(false);
+      setLoading(false); // Marca la carga como completada
     })
     .catch(error => {
       console.error('Error fetching data:', error);
-      setLoading(false);
+      setLoading(false); // En caso de error, marca la carga como completada
     });
   }, []);
 
   useEffect(() => {
+    // Filtrar proyectos basado en la búsqueda
     const filtered = projects.filter(project =>
       (project.name_project || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (project.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (usuarios.find(user => user.id === project.id_user)?.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (clientes.find(cliente => cliente.id === project.id_client)?.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (status.find(stat => stat.id === project.id_status)?.name || '').toLowerCase().includes(searchQuery.toLowerCase())
+      (project.user_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (project.client_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (project.name_status || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredProjects(filtered);
-  }, [searchQuery, projects, status, clientes, usuarios]);
+  }, [searchQuery, projects]);
 
   const deleteProject = (projectId) => {
     fetch(`http://192.168.100.7:3000/api/auth/eliminarproyecto/${projectId}`, {
@@ -93,13 +94,13 @@ const CMEProyectos = ({ navigation }) => {
               <Text style={styles.projectText}>Nombre: {project.name_project}</Text>
               <Text style={styles.projectText}>Descripción: {project.description}</Text>
               <Text style={styles.projectText}>Fecha límite: {project.deadline}</Text>
-              <Text style={styles.projectText}>Estado: {status.find(stat => stat.id === project.id_status)?.name_status}</Text>
-              <Text style={styles.projectText}>Usuario: {usuarios.find(user => user.id === project.id_user)?.name}</Text>
-              <Text style={styles.projectText}>Cliente: {clientes.find(cliente => cliente.id === project.id_client)?.contac_name}</Text>
+              <Text style={styles.projectText}>Estado: {project.name_status}</Text>
+              <Text style={styles.projectText}>Usuario: {project.user_name}</Text>
+              <Text style={styles.projectText}>Cliente: {project.client_name}</Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity 
                   style={styles.editButton} 
-                  onPress={() => navigation.navigate('UpdateProjectScreen', { projectId: project.id })}
+                  onPress={() => navigation.navigate('UpdateProyecto', { projectId: project.id })}
                 >
                   <Icon name="pencil" size={20} color="#fff" />
                 </TouchableOpacity>

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const CreateProyectoScreen = ({ navigation }) => {
+const UpdateProject = ({ route, navigation }) => {
+  const { projectId } = route.params;
   const [nameProject, setNameProject] = useState('');
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState(new Date());
@@ -15,26 +17,12 @@ const CreateProyectoScreen = ({ navigation }) => {
   const [status, setStatus] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
-  const [showDatePicker, setShowDatePicker] = useState(false); // Estado para controlar la visibilidad del DatePicker
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
-    // Tu lógica para obtener status, clientes y usuarios
-    fetchStatus();
     fetchClientes();
     fetchUsuarios();
   }, []);
-
-  const fetchStatus = () => {
-    fetch('http://192.168.100.7:3000/api/auth/status')
-      .then(response => response.json())
-      .then(data => {
-        setStatus(data);
-      })
-      .catch(error => {
-        console.error('Error fetching status:', error);
-        Alert.alert('Error', 'No se pudo obtener el estado del proyecto.');
-      });
-  };
 
   const fetchClientes = () => {
     fetch('http://192.168.100.7:3000/api/auth/clientes')
@@ -60,14 +48,14 @@ const CreateProyectoScreen = ({ navigation }) => {
       });
   };
 
-  const createProject = () => {
+  const updateProject = () => {
     if (!nameProject || !description || !deadline || !idStatus || !idUser || !idClient) {
       Alert.alert('Error', 'Todos los campos son requeridos.');
       return;
     }
 
     setLoading(true);
-    const newProject = {
+    const updatedProject = {
       name_project: nameProject,
       description: description,
       deadline: deadline.toISOString(),
@@ -75,13 +63,13 @@ const CreateProyectoScreen = ({ navigation }) => {
       id_user: idUser,
       id_client: idClient
     };
-  
-    fetch('http://192.168.100.7:3000/api/auth/crearproyecto', {
-      method: 'POST',
+
+    fetch(`http://192.168.100.7:3000/api/auth/actualizarproyecto/${projectId}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newProject),
+      body: JSON.stringify(updatedProject),
     })
       .then(response => {
         if (!response.ok) {
@@ -90,18 +78,18 @@ const CreateProyectoScreen = ({ navigation }) => {
         return response.json();
       })
       .then(data => {
-        Alert.alert('Proyecto creado', data.message, [{ text: 'OK', onPress: () => navigation.goBack() }]);
+        Alert.alert('Proyecto actualizado', data.message, [{ text: 'OK', onPress: () => navigation.goBack() }]);
       })
       .catch(error => {
-        console.error('Error creating project:', error);
-        Alert.alert('Error', 'No se pudo crear el proyecto.', [{ text: 'OK' }]);
+        console.error('Error updating project:', error);
+        Alert.alert('Error', 'No se pudo actualizar el proyecto.', [{ text: 'OK' }]);
       })
       .finally(() => setLoading(false));
   };
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || deadline;
-    setShowDatePicker(false); // Ocultar el DatePicker después de seleccionar una fecha
+    setShowDatePicker(false);
     setDeadline(currentDate);
   };
 
@@ -116,28 +104,28 @@ const CreateProyectoScreen = ({ navigation }) => {
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.text}>Nombre del Proyecto:</Text>
+        <Text style={styles.text}>Nuevo Nombre del Proyecto:</Text>
         <TextInput
           style={styles.input}
-          placeholder='Nombre del Proyecto'
+          placeholder='Nuevo Nombre'
           placeholderTextColor="white"
           value={nameProject}
           onChangeText={text => setNameProject(text)}
         />
-        <Text style={styles.text}>Descripción del Proyecto:</Text>
+        <Text style={styles.text}>Nueva Descripción del Proyecto:</Text>
         <TextInput
           style={styles.input}
-          placeholder="Descripción"
+          placeholder="Nueva Descripción"
           placeholderTextColor="white"
           value={description}
           onChangeText={text => setDescription(text)}
         />
-        <Text style={styles.text}>Fecha de Entrega:</Text>
+        <Text style={styles.text}>Nueva Fecha de Entrega:</Text>
         <TouchableOpacity
           style={styles.datePickerButton}
-          onPress={() => setShowDatePicker(true)} // Mostrar el DatePicker al presionar el botón
+          onPress={() => setShowDatePicker(true)}
         >
-          <Text style={styles.buttonText}>Seleccionar Fecha Límite</Text>
+          <Text style={styles.buttonText}>Seleccionar Nueva Fecha Límite</Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
@@ -149,7 +137,7 @@ const CreateProyectoScreen = ({ navigation }) => {
             onChange={onChangeDate}
           />
         )}
-        <Text style={styles.text}>Selecciona un Status:</Text>
+        <Text style={styles.text}>Selecciona un Nuevo Status:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idStatus}
@@ -162,7 +150,7 @@ const CreateProyectoScreen = ({ navigation }) => {
             <Picker.Item label="Suspendido" value="3" />
           </Picker>
         </View>
-        <Text style={styles.text}>Selecciona un Encargado:</Text>
+        <Text style={styles.text}>Selecciona un Nuevo Encargado:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idUser}
@@ -170,12 +158,12 @@ const CreateProyectoScreen = ({ navigation }) => {
             onValueChange={(itemValue, itemIndex) => setIdUser(itemValue)}
           >
             <Picker.Item label="Seleccionar Usuario" value="" />
-            {usuarios.map(user => (
-              <Picker.Item key={user.id} label={user.name} value={user.id} />
+            {usuarios.map(item => (
+              <Picker.Item key={item.id} label={item.name} value={item.id} />
             ))}
           </Picker>
         </View>
-        <Text style={styles.text}>Selecciona un Cliente:</Text>
+        <Text style={styles.text}>Selecciona un Nuevo Cliente:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idClient}
@@ -183,12 +171,12 @@ const CreateProyectoScreen = ({ navigation }) => {
             onValueChange={(itemValue, itemIndex) => setIdClient(itemValue)}
           >
             <Picker.Item label="Seleccionar Cliente" value="" />
-            {clientes.map(cliente => (
-              <Picker.Item key={cliente.id} label={cliente.contac_name} value={cliente.id} />
+            {clientes.map(item => (
+              <Picker.Item key={item.id} label={item.contac_name} value={item.id} />
             ))}
           </Picker>
         </View>
-        <Button title="Crear Proyecto" onPress={createProject} buttonStyle={styles.createButton} />
+        <Button title="Actualizar Proyecto" onPress={updateProject} buttonStyle={styles.createButton} />
       </ScrollView>
     </ImageBackground>
   );
@@ -249,4 +237,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateProyectoScreen;
+export default UpdateProject;

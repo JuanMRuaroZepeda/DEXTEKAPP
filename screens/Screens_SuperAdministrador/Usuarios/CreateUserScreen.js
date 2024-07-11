@@ -37,15 +37,14 @@ const CreateUserScreen = ({ navigation }) => {
 
       const result = await response.json();
 
-      if (response.ok) {
-        Alert.alert("Usuario Creado", `Usuario ${result.user.username} creado exitosamente`);
-        navigation.goBack();
-      } else {
-        Alert.alert("Error", result.message || "Ocurrió un error al crear el usuario");
+      if (!response.ok) {
+        throw new Error(result.message || 'Ocurrió un error al crear el usuario');
       }
+
+      Alert.alert('Usuario creado', result.message, [{ text: 'OK', onPress: () => navigation.goBack() }]);
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", "No se pudo conectar con la API");
+      Alert.alert('Error', error.message || 'No se pudo conectar con la API');
     }
   };
 
