@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const CMETareas = ({ navigation }) => {
   
