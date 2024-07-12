@@ -33,11 +33,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
       return;
     }
 
-<<<<<<< HEAD
-    fetch(`http://192.168.1.10:3000/api/auth/actualizarusuario/${userId}`, {
-=======
     fetch(`http://192.168.100.7:3000/api/auth/actualizarusuario/${userId}`, {
->>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

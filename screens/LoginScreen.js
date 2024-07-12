@@ -14,11 +14,8 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
     try {
-<<<<<<< HEAD
-      const response = await fetch('http://192.168.1.10:3000/api/auth/login', {
-=======
+      
       const response = await fetch('http://192.168.100.7:3000/api/auth/login', {
->>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
