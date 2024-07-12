@@ -23,6 +23,8 @@ import ConsultarProyectosScreen from '../screens/Screens_SuperAdministrador/Proy
 
 // Importar las pantallas de Tareas
 import CMETareasScreen from '../screens/Screens_SuperAdministrador/Tareas/CMETareasScreen';
+import CreateTareaScreen from '../screens/Screens_SuperAdministrador/Tareas/CreateTareaScreen';
+import UpdateTareaScreen from '../screens/Screens_SuperAdministrador/Tareas/UpdateTareaScreen';
 import ConsultarTareasScreen from '../screens/Screens_SuperAdministrador/Tareas/ConsultarTareasScreen';
 
 // Importar las pantallas de Clientes
@@ -107,7 +109,19 @@ const AppNavigator = () => {
         <Stack.Screen
           name="CMETareas"
           component={CMETareasScreen}
-          options={{ title: 'CME Tareas' }}
+          options={{ title: 'Crear/Modificar/Eliminar Tareas' }}
+        />
+
+        <Stack.Screen
+        name="CreateTarea"
+        component={CreateTareaScreen}
+        options={{ title: 'Crear Nueva Tarea' }}
+        />
+        
+        <Stack.Screen
+        name="UpdateTarea"
+        component={UpdateTareaScreen}
+        options={{ title: 'Modificar Tarea' }}
         />
 
         <Stack.Screen
