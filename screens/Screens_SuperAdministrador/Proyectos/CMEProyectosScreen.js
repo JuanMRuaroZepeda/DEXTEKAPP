@@ -13,10 +13,17 @@ const CMEProyectos = ({ navigation }) => {
 
   useEffect(() => {
     Promise.all([
+<<<<<<< HEAD
       fetch('http://192.168.1.10:3000/api/auth/proyectos').then(response => response.json()),
       fetch('http://192.168.1.10:3000/api/auth/status').then(response => response.json()),
       fetch('http://192.168.1.10:3000/api/auth/clientes').then(response => response.json()),
       fetch('http://192.168.1.10:3000/api/auth/usuarios').then(response => response.json())
+=======
+      fetch('http://192.168.100.7:3000/api/auth/proyectos').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/status').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/clientes').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/usuarios').then(response => response.json())
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
     ])
     .then(([proyectosData, statusData, clientesData, usuariosData]) => {
       setProjects(proyectosData);
@@ -44,7 +51,11 @@ const CMEProyectos = ({ navigation }) => {
   }, [searchQuery, projects]);
 
   const deleteProject = (projectId) => {
+<<<<<<< HEAD
     fetch(`http://192.168.1.10:3000/api/auth/eliminarproyecto/${projectId}`, {
+=======
+    fetch(`http://192.168.100.7:3000/api/auth/eliminarproyecto/${projectId}`, {
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
       method: 'DELETE'
     })
       .then(response => response.json())

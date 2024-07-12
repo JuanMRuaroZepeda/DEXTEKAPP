@@ -27,7 +27,11 @@ const CreateUserScreen = ({ navigation }) => {
     };
 
     try {
+<<<<<<< HEAD
       const response = await fetch('http://192.168.1.10:3000/api/auth/register', {
+=======
+      const response = await fetch('http://192.168.100.7:3000/api/auth/register', {
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

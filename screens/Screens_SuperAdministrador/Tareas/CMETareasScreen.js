@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, 
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const CMETareas = ({ navigation }) => {
+<<<<<<< HEAD
   const [projects, setProjects] = useState([]);
   const [status, setStatus] = useState([]);
   const [users, setUsers] = useState([]);
@@ -126,10 +127,18 @@ const CMETareas = ({ navigation }) => {
         <Icon name="add" size={30} color="#fff" />
       </TouchableOpacity>
     </ImageBackground>
+=======
+  
+    return (
+    <View style={styles.container}>
+      <Text>Welcome Home!</Text>
+    </View>
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
   );
 };
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   background: {
     flex: 1,
     resizeMode: 'cover',
@@ -139,11 +148,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+=======
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+<<<<<<< HEAD
   text: {
     color: 'white',
     alignSelf: 'center',
@@ -202,3 +214,8 @@ const styles = StyleSheet.create({
 });
 
 export default CMETareas;
+=======
+});
+
+export default CMETareas;
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208

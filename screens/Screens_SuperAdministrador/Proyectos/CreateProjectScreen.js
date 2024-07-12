@@ -25,7 +25,11 @@ const CreateProyectoScreen = ({ navigation }) => {
   }, []);
 
   const fetchStatus = () => {
+<<<<<<< HEAD
     fetch('http://192.168.1.10:3000/api/auth/status')
+=======
+    fetch('http://192.168.100.7:3000/api/auth/status')
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
       .then(response => response.json())
       .then(data => {
         setStatus(data);
@@ -37,7 +41,11 @@ const CreateProyectoScreen = ({ navigation }) => {
   };
 
   const fetchClientes = () => {
+<<<<<<< HEAD
     fetch('http://192.168.1.10:3000/api/auth/clientes')
+=======
+    fetch('http://192.168.100.7:3000/api/auth/clientes')
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
       .then(response => response.json())
       .then(data => {
         setClientes(data);
@@ -49,7 +57,11 @@ const CreateProyectoScreen = ({ navigation }) => {
   };
 
   const fetchUsuarios = () => {
+<<<<<<< HEAD
     fetch('http://192.168.1.10:3000/api/auth/usersrole3')
+=======
+    fetch('http://192.168.100.7:3000/api/auth/usersrole3')
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
       .then(response => response.json())
       .then(data => {
         setUsuarios(data);
@@ -76,7 +88,11 @@ const CreateProyectoScreen = ({ navigation }) => {
       id_client: idClient
     };
   
+<<<<<<< HEAD
     fetch('http://192.168.1.10:3000/api/auth/crearproyecto', {
+=======
+    fetch('http://192.168.100.7:3000/api/auth/crearproyecto', {
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
