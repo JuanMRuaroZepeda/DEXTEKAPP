@@ -10,7 +10,11 @@ const ConsultarUsuarios = ({ navigation }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
+<<<<<<< HEAD
+    fetch('http://192.168.1.10:3000/api/auth/usuarios')
+=======
     fetch('http://192.168.100.7:3000/api/auth/usuarios')
+>>>>>>> e86495b1bd5b45815396bc904d186e7f107b8208
       .then(response => response.json())
       .then(data => {
         setUsers(data);
