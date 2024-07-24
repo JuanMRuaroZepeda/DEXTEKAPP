@@ -29,6 +29,8 @@ import ConsultarTareasScreen from '../screens/Screens_SuperAdministrador/Tareas/
 
 // Importar las pantallas de Clientes
 import CMEClientesScreen from '../screens/Screens_SuperAdministrador/Clientes/CMEClientesScreen';
+import CreateClienteScreen from '../screens/Screens_SuperAdministrador/Clientes/CreateClienteScreen';
+import UpdateClienteScreen from '../screens/Screens_SuperAdministrador/Clientes/UpdateClienteScreen';
 import ConsultarClientesScreen from '../screens/Screens_SuperAdministrador/Clientes/ConsultarClientesScreen';
 
 
@@ -133,16 +135,26 @@ const AppNavigator = () => {
         <Stack.Screen
           name="CMEClientes"
           component={CMEClientesScreen}
-          options={{ title: 'CME Clientes' }}
+          options={{ title: 'Crear/Modificar/Eliminar Clientes' }}
         />
 
+        <Stack.Screen
+        name="CreateCliente"
+        component={CreateClienteScreen}
+        options={{ title: 'Crear Cliente' }}
+        />
+
+        <Stack.Screen
+        name="UpdateCliente"
+        component={UpdateClienteScreen}
+        options={{ title: 'Modificar Cliente' }}
+        />
+        
         <Stack.Screen
           name="ConsultarClientes"
           component={ConsultarClientesScreen}
           options={{ title: 'Consultar Clientes' }}
         />
-
-
 
         <Stack.Screen
           name="AreaManager"

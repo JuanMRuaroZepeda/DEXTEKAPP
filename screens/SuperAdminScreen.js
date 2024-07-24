@@ -1,4 +1,3 @@
-// screens/SuperAdminScreen.js
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -7,16 +6,17 @@ import {
   ImageBackground,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, Icon } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Asegúrate de usar un único import
 
-const SuperAdminScreen = ({ navigation, route }) => {
+const SuperAdminScreen = ({ navigation }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [name, setName] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    // Recuperar el nombre almacenado en AsyncStorage al cargar la pantalla
     AsyncStorage.getItem('name').then((value) => {
       setName(value);
     });
@@ -25,7 +25,7 @@ const SuperAdminScreen = ({ navigation, route }) => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('role');
-    await AsyncStorage.removeItem('name'); // Eliminar el nombre al cerrar sesión
+    await AsyncStorage.removeItem('name');
     navigation.navigate('Login');
   };
 
@@ -33,31 +33,13 @@ const SuperAdminScreen = ({ navigation, route }) => {
     setMenuVisible(!menuVisible);
   };
 
-  const renderMenu = () => (
-    <ScrollView style={styles.menu}>
-      {renderMenuItem('Usuarios', [
-        { title: 'Crear/Modificar/Eliminar', screen: 'CMEUsuario' },
-        { title: 'Consultar Usuarios', screen: 'ConsultarUsuarios' },
-      ])}
-      {renderMenuItem('Proyectos', [
-        { title: 'Crear/Modificar/Eliminar', screen: 'CMEProyectos' },
-        { title: 'Consultar Proyectos', screen: 'ConsultarProyectos' },
-      ])}
-      {renderMenuItem('Tareas', [
-        { title: 'Crear/Modificar/Eliminar', screen: 'CMETareas' },
-        { title: 'Consultar Tareas', screen: 'ConsultarTareas' },
-      ])}
-      {renderMenuItem('Clientes', [
-        { title: 'Crear/Modificar/Eliminar', screen: 'CMEClientes' },
-        { title: 'Consultar Clientes', screen: 'ConsultarClientes' },
-      ])}
-      <Button
-        title="Cerrar Sesión"
-        buttonStyle={styles.logoutButton} // Establecer el estilo del botón
-        onPress={handleLogout}
-      />
-    </ScrollView>
-  );
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      // Lógica adicional para actualizar los datos aquí
+    }, 2000);
+  };
 
   const renderMenuItem = (title, subItems) => (
     <View key={title} style={styles.menuItem}>
@@ -80,15 +62,66 @@ const SuperAdminScreen = ({ navigation, route }) => {
       style={styles.background}
     >
       <View style={styles.container}>
-        {/* Contenedor para alinear horizontalmente */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.menuButton} onPress={toggleMenu}>
-            <Icon name="menu" size={30} color="white" />
+            <Icon name="bars" size={35} color="white" />
           </TouchableOpacity>
           <Text style={styles.title}>Bienvenido {'\n'} {name}</Text>
         </View>
-        {/* Renderizar el menú si es visible */}
-        {menuVisible && renderMenu()}
+        {menuVisible && (
+          <View style={styles.menu}>
+            {renderMenuItem('Usuarios', [
+              { title: 'Crear/Modificar/Eliminar', screen: 'CMEUsuario' },
+              { title: 'Consultar Usuarios', screen: 'ConsultarUsuarios' },
+            ])}
+            {renderMenuItem('Proyectos', [
+              { title: 'Crear/Modificar/Eliminar', screen: 'CMEProyectos' },
+              { title: 'Consultar Proyectos', screen: 'ConsultarProyectos' },
+            ])}
+            {renderMenuItem('Tareas', [
+              { title: 'Crear/Modificar/Eliminar', screen: 'CMETareas' },
+              { title: 'Consultar Tareas', screen: 'ConsultarTareas' },
+            ])}
+            {renderMenuItem('Clientes', [
+              { title: 'Crear/Modificar/Eliminar', screen: 'CMEClientes' },
+              { title: 'Consultar Clientes', screen: 'ConsultarClientes' },
+            ])}
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={handleLogout}
+            >
+              <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          contentContainerStyle={styles.scrollContainer}
+        >
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('ConsultarUsuarios')}>
+              <Icon name="user" size={50} color="white" />
+              <Text style={styles.buttonText}>Consultar Usuarios</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('ConsultarProyectos')}>
+              <Icon name="briefcase" size={50} color="white" />
+              <Text style={styles.buttonText}>Consultar Proyectos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('ConsultarTareas')}>
+              <Icon name="tasks" size={50} color="white" />
+              <Text style={styles.buttonText}>Consultar Tareas</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('ConsultarClientes')}>
+              <Icon name="user-circle" size={50} color="white" />
+              <Text style={styles.buttonText}>Consultar Clientes</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     </ImageBackground>
   );
@@ -105,25 +138,24 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   title: {
-    top: -36,
+    top: -22,
     fontSize: 22,
     marginBottom: 10,
     textAlign: 'center',
     color: 'white',
   },
   header: {
-    flexDirection: 'row', // Alinear horizontalmente los elementos
-    alignItems: 'left', // Centrar verticalmente los elementos
-    marginBottom: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   menuButton: {
-    top: -30,
-    marginLeft: 1, // Espacio entre el botón de menú y el texto de bienvenida
-    marginRight: 15, // Espacio entre el botón de menú y el texto de bienvenida
+    top: -35,
+    marginRight: 20,
   },
   menu: {
     position: 'absolute',
-    top: 60,
+    top: 70,
     left: 20,
     right: 20,
     backgroundColor: '#717171',
@@ -149,6 +181,35 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'flex-start', // Ajustar para alinear los botones arriba
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    paddingVertical: 10, // Ajustar el espacio superior e inferior
+  },
+  bigButton: {
+    backgroundColor: '#FF8820', // Color de fondo rojo
+    borderRadius: 20,
+    width: '80%',
+    paddingVertical: 15,
+    alignItems: 'center',
+    marginBottom: 15,
+    marginTop: 5,
+  },
+  buttonText: {
+    color: 'white', // Texto en blanco
+    fontSize: 18,
+    marginTop: 10,
   },
 });
 

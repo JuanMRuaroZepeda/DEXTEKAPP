@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const CMEProyectos = ({ navigation }) => {
@@ -10,26 +10,26 @@ const CMEProyectos = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     Promise.all([
-
       fetch('http://192.168.100.7:3000/api/auth/proyectos').then(response => response.json()),
       fetch('http://192.168.100.7:3000/api/auth/status').then(response => response.json()),
       fetch('http://192.168.100.7:3000/api/auth/clientes').then(response => response.json()),
       fetch('http://192.168.100.7:3000/api/auth/usuarios').then(response => response.json())
     ])
-    .then(([proyectosData, statusData, clientesData, usuariosData]) => {
-      setProjects(proyectosData);
-      setStatus(statusData);
-      setClientes(clientesData);
-      setUsuarios(usuariosData);
-      setLoading(false); // Marca la carga como completada
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-      setLoading(false); // En caso de error, marca la carga como completada
-    });
+      .then(([proyectosData, statusData, clientesData, usuariosData]) => {
+        setProjects(proyectosData);
+        setStatus(statusData);
+        setClientes(clientesData);
+        setUsuarios(usuariosData);
+        setLoading(false); // Marca la carga como completada
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setLoading(false); // En caso de error, marca la carga como completada
+      });
   }, []);
 
   useEffect(() => {
@@ -44,8 +44,28 @@ const CMEProyectos = ({ navigation }) => {
     setFilteredProjects(filtered);
   }, [searchQuery, projects]);
 
-  const deleteProject = (projectId) => {
+  const onRefresh = () => {
+    setRefreshing(true);
+    Promise.all([
+      fetch('http://192.168.100.7:3000/api/auth/proyectos').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/status').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/clientes').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/usuarios').then(response => response.json())
+    ])
+      .then(([proyectosData, statusData, clientesData, usuariosData]) => {
+        setProjects(proyectosData);
+        setStatus(statusData);
+        setClientes(clientesData);
+        setUsuarios(usuariosData);
+        setRefreshing(false); // Marca la carga como completada
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setRefreshing(false); // En caso de error, marca la carga como completada
+      });
+  };
 
+  const deleteProject = (projectId) => {
     fetch(`http://192.168.100.7:3000/api/auth/eliminarproyecto/${projectId}`, {
       method: 'DELETE'
     })
@@ -81,7 +101,14 @@ const CMEProyectos = ({ navigation }) => {
 
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <Text style={styles.text}>Proyectos</Text>
         <TextInput
           style={styles.searchInput}

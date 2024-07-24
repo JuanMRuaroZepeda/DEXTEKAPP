@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const ConsultarProyectos = ({ navigation }) => {
@@ -10,11 +10,15 @@ const ConsultarProyectos = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [refreshing, setRefreshing] = useState(false); // Estado para manejar la acción de refrescar
 
   useEffect(() => {
-    Promise.all([
-      
+    fetchData();
+  }, []);
 
+  const fetchData = () => {
+    setLoading(true);
+    Promise.all([
       fetch('http://192.168.100.7:3000/api/auth/proyectos').then(response => response.json()),
       fetch('http://192.168.100.7:3000/api/auth/status').then(response => response.json()),
       fetch('http://192.168.100.7:3000/api/auth/clientes').then(response => response.json()),
@@ -26,12 +30,14 @@ const ConsultarProyectos = ({ navigation }) => {
       setClientes(clientesData);
       setUsuarios(usuariosData);
       setLoading(false); // Marca la carga como completada
+      setRefreshing(false); // Marca la carga como completada
     })
     .catch(error => {
       console.error('Error fetching data:', error);
       setLoading(false); // En caso de error, marca la carga como completada
+      setRefreshing(false); // En caso de error, marca la carga como completada
     });
-  }, []);
+  };
 
   useEffect(() => {
     // Filtrar proyectos basado en la búsqueda
@@ -45,7 +51,12 @@ const ConsultarProyectos = ({ navigation }) => {
     setFilteredProjects(filtered);
   }, [searchQuery, projects]);
 
-  if (loading) {
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+  if (loading && !refreshing) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#00ff00" />
@@ -55,7 +66,14 @@ const ConsultarProyectos = ({ navigation }) => {
 
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <Text style={styles.text}>Proyectos</Text>
         <TextInput
           style={styles.searchInput}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const CMETareas = ({ navigation }) => {
@@ -11,6 +11,7 @@ const CMETareas = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -46,6 +47,29 @@ const CMETareas = ({ navigation }) => {
     setFilteredTasks(filtered);
   }, [searchQuery, tasks]);
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    Promise.all([
+      fetch('http://192.168.100.7:3000/api/auth/proyectos').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/status').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/usuarios').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/clientes').then(response => response.json()),
+      fetch('http://192.168.100.7:3000/api/auth/tareas').then(response => response.json()),
+    ])
+      .then(([proyectosData, statusData, usuariosData, clientesData, tareasData]) => {
+        setProjects(proyectosData);
+        setStatus(statusData);
+        setUsers(usuariosData);
+        setClients(clientesData);
+        setTasks(tareasData);
+        setRefreshing(false); // Marca la carga como completada
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setRefreshing(false); // En caso de error, marca la carga como completada
+      });
+  };
+
   const deleteTask = (taskId) => {
     fetch(`http://192.168.100.7:3000/api/auth/eliminartarea/${taskId}`, {
       method: 'DELETE'
@@ -64,7 +88,7 @@ const CMETareas = ({ navigation }) => {
   const confirmDeleteTask = (taskId) => {
     Alert.alert(
       'Eliminar Tarea',
-      '¿Estas seguro de que deseas eliminar esta tarea?',
+      '¿Estás seguro de que deseas eliminar esta tarea?',
       [
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Sí', onPress: () => deleteTask(taskId) }
@@ -82,7 +106,14 @@ const CMETareas = ({ navigation }) => {
 
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <Text style={styles.text}>Tareas</Text>
         <TextInput
           style={styles.searchInput}
@@ -98,8 +129,8 @@ const CMETareas = ({ navigation }) => {
               <Text style={styles.taskText}>Descripción: {task.description}</Text>
               <Text style={styles.taskText}>Fecha Limite: {task.deadline}</Text>
               <Text style={styles.taskText}>Estado: {task.name_status}</Text>
-              <Text style={styles.taskText}>Usuario: {task.name_user }</Text>
-              <Text style={styles.taskText}>Cliente: {task.name_client }</Text>
+              <Text style={styles.taskText}>Usuario: {task.name_user}</Text>
+              <Text style={styles.taskText}>Cliente: {task.name_client}</Text>
               <Text style={styles.taskText}>Proyecto: {task.name_project}</Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity 

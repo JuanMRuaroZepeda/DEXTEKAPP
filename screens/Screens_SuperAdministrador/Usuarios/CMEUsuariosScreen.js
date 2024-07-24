@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Asegúrate de tener instalada esta dependencia
 
 const CMEUsuariosScreen = ({ navigation }) => {
@@ -7,20 +7,10 @@ const CMEUsuariosScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    
-
-    fetch('http://192.168.100.7:3000/api/auth/usuarios')
-      .then(response => response.json())
-      .then(data => {
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-      });
+    fetchUsers();
   }, []);
 
   useEffect(() => {
@@ -33,6 +23,25 @@ const CMEUsuariosScreen = ({ navigation }) => {
     );
     setFilteredUsers(filtered);
   }, [searchQuery, users]);
+
+  const fetchUsers = () => {
+    fetch('http://192.168.100.7:3000/api/auth/usuarios')
+      .then(response => response.json())
+      .then(data => {
+        setUsers(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchUsers();
+    setRefreshing(false);
+  };
 
   const getRoleText = (roleId) => {
     switch (roleId) {
@@ -54,7 +63,6 @@ const CMEUsuariosScreen = ({ navigation }) => {
   };
 
   const deleteUser = (userId) => {
-
     fetch(`http://192.168.100.7:3000/api/auth/eliminarusuario/${userId}`, {
       method: 'DELETE'
     })
@@ -90,7 +98,14 @@ const CMEUsuariosScreen = ({ navigation }) => {
 
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <Text style={styles.text}>Usuarios</Text>
         <TextInput
           style={styles.searchInput}

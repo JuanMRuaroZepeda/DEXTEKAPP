@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput, RefreshControl } from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons'; // Asegúrate de tener instalada esta dependencia
 
@@ -8,21 +8,27 @@ const ConsultarUsuarios = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [refreshing, setRefreshing] = useState(false); // Estado para manejar la acción de refrescar
 
   useEffect(() => {
-    
+    fetchUsers();
+  }, []);
 
+  const fetchUsers = () => {
+    setLoading(true);
     fetch('http://192.168.100.7:3000/api/auth/usuarios')
       .then(response => response.json())
       .then(data => {
         setUsers(data);
         setLoading(false);
+        setRefreshing(false); // Marca la carga como completada
       })
       .catch(error => {
         console.error(error);
         setLoading(false);
+        setRefreshing(false); // En caso de error, marca la carga como completada
       });
-  }, []);
+  };
 
   useEffect(() => {
     // Filtrar usuarios basado en la búsqueda
@@ -54,7 +60,12 @@ const ConsultarUsuarios = ({ navigation }) => {
     }
   };
 
-  if (loading) {
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchUsers();
+  };
+
+  if (loading && !refreshing) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#00ff00" />
@@ -64,7 +75,14 @@ const ConsultarUsuarios = ({ navigation }) => {
 
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <Text style={styles.text}>Usuarios</Text>
         <TextInput
           style={styles.searchInput}

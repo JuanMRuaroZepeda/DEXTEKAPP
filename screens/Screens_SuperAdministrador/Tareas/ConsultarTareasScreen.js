@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput, RefreshControl } from 'react-native';
 
 const ConsultarTareas = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
@@ -10,8 +10,14 @@ const ConsultarTareas = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [refreshing, setRefreshing] = useState(false); // Estado para manejar la acción de refrescar
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    setLoading(true);
     Promise.all([
       fetch('http://192.168.100.7:3000/api/auth/proyectos').then(response => response.json()),
       fetch('http://192.168.100.7:3000/api/auth/status').then(response => response.json()),
@@ -26,12 +32,14 @@ const ConsultarTareas = ({ navigation }) => {
         setClients(clientesData);
         setTasks(tareasData);
         setLoading(false);
+        setRefreshing(false); // Marca la carga como completada
       })
       .catch(error => {
         console.error('Error fetching data:', error);
         setLoading(false);
+        setRefreshing(false); // En caso de error, marca la carga como completada
       });
-  }, []);
+  };
 
   useEffect(() => {
     const filtered = tasks.filter(task =>
@@ -71,7 +79,12 @@ const ConsultarTareas = ({ navigation }) => {
     );
   };
 
-  if (loading) {
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+  if (loading && !refreshing) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#00ff00" />
@@ -81,7 +94,14 @@ const ConsultarTareas = ({ navigation }) => {
 
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <Text style={styles.text}>Tareas</Text>
         <TextInput
           style={styles.searchInput}
