@@ -14,7 +14,6 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
     try {
-      
       const response = await fetch('http://192.168.100.7:3000/api/auth/login', {
         method: 'POST',
         headers: {
@@ -30,6 +29,20 @@ const LoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('token', data.accessToken);
         await AsyncStorage.setItem('role', data.id_role.toString());
         await AsyncStorage.setItem('name', data.name); // Almacena el nombre en lugar del nombre de usuario
+        await AsyncStorage.setItem('status', data.id_status.toString()); // Almacena el estado del usuario
+
+        if (data.id_status === 2) {
+          alert('Cuenta Eliminada');
+          return;
+        } else if (data.id_status === 3) {
+          alert('Cuenta Suspendida');
+          return;
+        } else if (data.id_status !== 1) {
+          alert('Estado de cuenta no válido');
+          return;
+        }
+
+        // Redirigir según el rol solo si el estado es 1 (Activo)
         switch (data.id_role.toString()) {
           case '1':
             navigation.navigate('SuperAdmin', { name: data.name });
@@ -57,45 +70,45 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <ImageBackground source={require('../assets/fondos/fondo.jpg')} style={styles.background}>
-    <View style={styles.container}>
-    <Image source={require('../assets/fondos/logo.png')} style={styles.logo} />
-      <Text style={styles.text}>Nombre de Usuario:</Text>
-      <TextInput
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
-        placeholder="Nombre de Usuario"
-        placeholderTextColor="#aaa"
-        required  // Campo obligatorio
-      />
-      <Text style={styles.text}>Contraseña:</Text>
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        placeholder="Contraseña"
-        placeholderTextColor="#aaa"
-        required  // Campo obligatorio
-      />
-      <Button title="Iniciar Sesión" onPress={handleLogin} color="red" />
-    </View>
+      <View style={styles.container}>
+        <Image source={require('../assets/fondos/logo.png')} style={styles.logo} />
+        <Text style={styles.text}>Nombre de Usuario:</Text>
+        <TextInput
+          style={styles.input}
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+          placeholder="Nombre de Usuario"
+          placeholderTextColor="#aaa"
+          required  // Campo obligatorio
+        />
+        <Text style={styles.text}>Contraseña:</Text>
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          placeholder="Contraseña"
+          placeholderTextColor="#aaa"
+          required  // Campo obligatorio
+        />
+        <Button title="Iniciar Sesión" onPress={handleLogin} color="red" />
+      </View>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
-      flex: 1,
-      resizeMode: 'cover',
+    flex: 1,
+    resizeMode: 'cover',
   },
   container: {
-      flex: 1,
-      justifyContent: 'center',
-      paddingHorizontal: 20,
-      marginBottom: 20, // Subir el contenido
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 20, // Subir el contenido
   },
   logo: {
     width: width * 0.5, // 50% del ancho de la pantalla
@@ -106,18 +119,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: 'red',
     borderWidth: 1.5, // Grosor del borde
-  },  
+  },
   text: {
-      color: 'white', // Texto de color blanco
-      marginBottom: 8,
+    color: 'white', // Texto de color blanco
+    marginBottom: 8,
   },
   input: {
-      height: 40,
-      borderColor: 'white',
-      borderWidth: 1,
-      marginBottom: 12,
-      paddingHorizontal: 8,
-      color: 'white', // Texto del input de color blanco
+    height: 40,
+    borderColor: 'white',
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    color: 'white', // Texto del input de color blanco
   },
 });
 
