@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10, // Ajustar el espacio superior e inferior
   },
   bigButton: {
-    backgroundColor: '#FF8820', // Color de fondo rojo
+    backgroundColor: 'black', // Color de fondo rojo
     borderRadius: 20,
     width: '80%',
     paddingVertical: 15,

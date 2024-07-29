@@ -33,7 +33,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
       return;
     }
 
-    fetch(`http://192.168.100.7:3000/api/auth/actualizarusuario/${userId}`, {
+    fetch(`https://apidextek.fragomx.com/api/auth/actualizarusuario/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

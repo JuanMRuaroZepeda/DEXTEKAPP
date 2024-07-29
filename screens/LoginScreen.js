@@ -14,7 +14,7 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/login', {
+      const response = await fetch('https://apidextek.fragomx.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

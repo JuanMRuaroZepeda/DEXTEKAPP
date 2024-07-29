@@ -19,10 +19,10 @@ const ConsultarProyectos = ({ navigation }) => {
   const fetchData = () => {
     setLoading(true);
     Promise.all([
-      fetch('http://192.168.100.7:3000/api/auth/proyectos').then(response => response.json()),
-      fetch('http://192.168.100.7:3000/api/auth/status').then(response => response.json()),
-      fetch('http://192.168.100.7:3000/api/auth/clientes').then(response => response.json()),
-      fetch('http://192.168.100.7:3000/api/auth/usuarios').then(response => response.json())
+      fetch('https://apidextek.fragomx.com/api/auth/proyectos').then(response => response.json()),
+      fetch('https://apidextek.fragomx.com/api/auth/status').then(response => response.json()),
+      fetch('https://apidextek.fragomx.com/api/auth/clientes').then(response => response.json()),
+      fetch('https://apidextek.fragomx.com/api/auth/usuarios').then(response => response.json())
     ])
     .then(([proyectosData, statusData, clientesData, usuariosData]) => {
       setProjects(proyectosData);

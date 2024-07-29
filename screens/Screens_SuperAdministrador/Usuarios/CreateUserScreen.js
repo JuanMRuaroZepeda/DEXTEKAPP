@@ -28,7 +28,7 @@ const CreateUserScreen = ({ navigation }) => {
 
     try {
 
-      const response = await fetch('http://192.168.100.7:3000/api/auth/register', {
+      const response = await fetch('https://apidextek.fragomx.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

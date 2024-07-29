@@ -20,7 +20,7 @@ const UpdateClienteScreen = ({ route, navigation }) => {
     }, []);
 
     const fetchBranches = () => {
-        fetch('http://192.168.100.7:3000/api/auth/sucursales')
+        fetch('https://apidextek.fragomx.com/api/auth/sucursales')
             .then(response => response.json())
             .then(data => {
                 setBranches(data);
@@ -50,7 +50,7 @@ const UpdateClienteScreen = ({ route, navigation }) => {
             id_branch
         };
 
-        fetch(`http://192.168.100.7:3000/api/auth/actualizarcliente/${clienteId}`, {
+        fetch(`https://apidextek.fragomx.com/api/auth/actualizarcliente/${clienteId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ const ConsultarUsuarios = ({ navigation }) => {
 
   const fetchUsers = () => {
     setLoading(true);
-    fetch('http://192.168.100.7:3000/api/auth/usuarios')
+    fetch('https://apidextek.fragomx.com/api/auth/usuarios')
       .then(response => response.json())
       .then(data => {
         setUsers(data);

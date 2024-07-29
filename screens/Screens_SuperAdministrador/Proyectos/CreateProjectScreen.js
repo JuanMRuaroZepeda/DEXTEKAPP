@@ -26,7 +26,7 @@ const CreateProyectoScreen = ({ navigation }) => {
 
   const fetchStatus = () => {
 
-    fetch('http://192.168.100.7:3000/api/auth/status')
+    fetch('https://apidextek.fragomx.com/api/auth/status')
 
       .then(response => response.json())
       .then(data => {
@@ -39,7 +39,7 @@ const CreateProyectoScreen = ({ navigation }) => {
   };
 
   const fetchClientes = () => {
-    fetch('http://192.168.100.7:3000/api/auth/clientes')
+    fetch('https://apidextek.fragomx.com/api/auth/clientes')
       .then(response => response.json())
       .then(data => {
         setClientes(data);
@@ -52,7 +52,7 @@ const CreateProyectoScreen = ({ navigation }) => {
 
   const fetchUsuarios = () => {
 
-    fetch('http://192.168.100.7:3000/api/auth/usersrole3')
+    fetch('https://apidextek.fragomx.com/api/auth/usersrole3')
 
       .then(response => response.json())
       .then(data => {
@@ -80,7 +80,7 @@ const CreateProyectoScreen = ({ navigation }) => {
       id_client: idClient
     };
 
-    fetch('http://192.168.100.7:3000/api/auth/crearproyecto', {
+    fetch('https://apidextek.fragomx.com/api/auth/crearproyecto', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -25,7 +25,7 @@ const CMEUsuariosScreen = ({ navigation }) => {
   }, [searchQuery, users]);
 
   const fetchUsers = () => {
-    fetch('http://192.168.100.7:3000/api/auth/usuarios')
+    fetch('https://apidextek.fragomx.com/api/auth/usuarios')
       .then(response => response.json())
       .then(data => {
         setUsers(data);
@@ -63,7 +63,7 @@ const CMEUsuariosScreen = ({ navigation }) => {
   };
 
   const deleteUser = (userId) => {
-    fetch(`http://192.168.100.7:3000/api/auth/eliminarusuario/${userId}`, {
+    fetch(`https://apidextek.fragomx.com/api/auth/eliminarusuario/${userId}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

@@ -27,7 +27,7 @@ const CreateTareaScreen = ({ navigation }) => {
   }, []);
 
   const fetchStatus = () => {
-    fetch('http://192.168.100.7:3000/api/auth/status')
+    fetch('https://apidextek.fragomx.com/api/auth/status')
       .then(response => response.json())
       .then(data => setStatus(data))
       .catch(error => {
@@ -37,7 +37,7 @@ const CreateTareaScreen = ({ navigation }) => {
   };
 
   const fetchClients = () => {
-    fetch('http://192.168.100.7:3000/api/auth/clientes')
+    fetch('https://apidextek.fragomx.com/api/auth/clientes')
       .then(response => response.json())
       .then(data => setClients(data))
       .catch(error => {
@@ -47,7 +47,7 @@ const CreateTareaScreen = ({ navigation }) => {
   };
 
   const fetchUsers = () => {
-    fetch('http://192.168.100.7:3000/api/auth/usersrole3')
+    fetch('https://apidextek.fragomx.com/api/auth/usersrole3')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => {
@@ -57,7 +57,7 @@ const CreateTareaScreen = ({ navigation }) => {
   };
 
   const fetchProjects = () => {
-    fetch('http://192.168.100.7:3000/api/auth/proyectos')
+    fetch('https://apidextek.fragomx.com/api/auth/proyectos')
       .then(response => response.json())
       .then(data => setProjects(data))
       .catch(error => {
@@ -83,7 +83,7 @@ const CreateTareaScreen = ({ navigation }) => {
       id_project: idProject
     };
 
-    fetch('http://192.168.100.7:3000/api/auth/tasktnuevo', {
+    fetch('https://apidextek.fragomx.com/api/auth/tasktnuevo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
