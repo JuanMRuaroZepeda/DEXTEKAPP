@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, ImageBackground, ScrollView, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as DocumentPicker from 'expo-document-picker';
+import axios from 'axios';
+import * as FileSystem from 'expo-file-system';
 
 const CreateUserScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -9,6 +12,7 @@ const CreateUserScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [idDocument, setIdDocument] = useState('');
+  const [document, setDocument] = useState(null);
   const [idPosition, setIdPosition] = useState('');
   const [idBranch, setIdBranch] = useState('');
   const [idDepartment, setIdDepartment] = useState('');
@@ -19,48 +23,164 @@ const CreateUserScreen = ({ navigation }) => {
   const [idStatus, setIdStatus] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const [documents, setDocuments] = useState([]);
+  const [positions, setPositions] = useState([]);
+  const [branches, setBranches] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [contracts, setContracts] = useState([]);
+  const [jobTitles, setJobTitles] = useState([]);
+
+  useEffect(() => {
+    fetchDocuments();
+    fetchPositions();
+    fetchBranches();
+    fetchDepartments();
+    fetchContracts();
+    fetchJobTitles();
+  }, []);
+
+  const fetchDocuments = () => {
+    fetch('http://192.168.100.7:3000/api/auth/documentos')
+      .then(response => response.json())
+      .then(data => setDocuments(data))
+      .catch(error => {
+        console.error('Error fetching Documents:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de documentos.');
+      });
+  };
+
+  const fetchPositions = () => {
+    fetch('http://192.168.100.7:3000/api/auth/positions')
+      .then(response => response.json())
+      .then(data => setPositions(data))
+      .catch(error => {
+        console.error('Error fetching Positions:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de posiciones.');
+      });
+  };
+
+  const fetchBranches = () => {
+    fetch('http://192.168.100.7:3000/api/auth/sucursales')
+      .then(response => response.json())
+      .then(data => setBranches(data))
+      .catch(error => {
+        console.error('Error fetching Branches:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de sucursales.');
+      });
+  };
+
+  const fetchDepartments = () => {
+    fetch('http://192.168.100.7:3000/api/auth/departamentos')
+      .then(response => response.json())
+      .then(data => setDepartments(data))
+      .catch(error => {
+        console.error('Error fetching Departments:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de departamentos.');
+      });
+  };
+
+  const fetchContracts = () => {
+    fetch('http://192.168.100.7:3000/api/auth/contratos')
+      .then(response => response.json())
+      .then(data => setContracts(data))
+      .catch(error => {
+        console.error('Error fetching Contracts:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de contratos.');
+      });
+  };
+
+  const fetchJobTitles = () => {
+    fetch('http://192.168.100.7:3000/api/auth/jobstitles')
+      .then(response => response.json())
+      .then(data => setJobTitles(data))
+      .catch(error => {
+        console.error('Error fetching JobTitles:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de títulos de trabajo.');
+      });
+  };
+
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || dateStart;
+    setShowDatePicker(false);
+    setDateStart(currentDate);
+  };
+
+  const handleDocumentPick = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({});
+      
+      console.log('Document Picker Result:', result); // Para ver el resultado completo
+      
+      if (result.canceled) {
+        console.log('Document picker was canceled'); // Agrega este console log si el picker fue cancelado
+        return;
+      }
+  
+      if (result.assets && result.assets.length > 0) {
+        const selectedDocument = result.assets[0];
+        setDocument(selectedDocument);
+        console.log('Selected Document:', selectedDocument); // Agrega este console log para verificar el archivo seleccionado
+      } else {
+        console.log('No document selected'); // Agrega este console log si no se seleccionó ningún archivo
+      }
+    } catch (error) {
+      console.error('Error picking document:', error);
+      Alert.alert('Error', 'No se pudo seleccionar el documento.');
+    }
+  };
+
   const registerUser = async () => {
     if (!name || !lastname || !username || !password || !idDocument || !idPosition || !idBranch || !idDepartment || !dateStart || !idContract || !idJobTitle || !idRole || !idStatus) {
       Alert.alert('Campos incompletos', 'Por favor completa todos los campos.', [{ text: 'OK' }]);
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('name', name);
     formData.append('lastname', lastname);
     formData.append('username', username);
     formData.append('password', password);
-    formData.append('id_document', parseInt(idDocument));
-    formData.append('id_position', parseInt(idPosition));
-    formData.append('id_branch', parseInt(idBranch));
-    formData.append('id_department', parseInt(idDepartment));
-    formData.append('dateStart', dateStart.toISOString());
-    formData.append('id_contract', parseInt(idContract));
-    formData.append('id_jobTitle', parseInt(idJobTitle));
-    formData.append('id_role', parseInt(idRole));
-    formData.append('id_status', parseInt(idStatus));
-
+    formData.append('id_document', idDocument);
+    formData.append('id_positionCompany', idPosition);
+    formData.append('id_branch', idBranch);
+    formData.append('id_department', idDepartment);
+    formData.append('date_start', dateStart.toISOString());
+    formData.append('id_contract', idContract);
+    formData.append('id_jobTitle', idJobTitle);
+    formData.append('id_role', idRole);
+    formData.append('id_status', idStatus);
+  
+    if (document) {
+      const fileUri = document.uri;
+      const fileName = document.name;
+      const fileType = document.mimeType;
+  
+      formData.append('document', {
+        uri: fileUri,
+        type: fileType,
+        name: fileName,
+      });
+    }
+  
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/register2', {
-        method: 'POST',
+      const response = await axios.post('http://192.168.100.7:3000/api/auth/register2', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        body: formData,
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Ocurrió un error al crear el usuario');
+    
+      console.log(response.data); // Verifica la respuesta aquí
+    
+      if (response.status !== 200) {
+        throw new Error(response.data.message || 'Ocurrió un error al crear el usuario');
       }
-
-      Alert.alert('Usuario creado', result.message, [{ text: 'OK', onPress: () => navigation.goBack() }]);
+    
+      Alert.alert('Usuario creado', response.data.message, [{ text: 'OK', onPress: () => navigation.goBack() }]);
     } catch (error) {
-      console.error(error);
-      Alert.alert('Error', error.message || 'No se pudo conectar con la API');
-    }
-  };
+      console.error(error.response ? error.response.data : error.message);
+      Alert.alert('Error', error.response ? error.response.data.message : 'No se pudo conectar con la API');
+    }    
+  };  
 
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
@@ -99,118 +219,129 @@ const CreateUserScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <Text style={styles.text}>Tipo de Documento de Identificación:</Text>
+        <Text style={styles.text}>Selecciona el tipo de Documento:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idDocument}
+            onValueChange={(itemValue) => setIdDocument(itemValue)}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdDocument(itemValue)}
           >
-            <Picker.Item label="Seleccione una Opción" />
-            {/* Agrega aquí las opciones del Picker */}
+            <Picker.Item label="Seleccione una Opción" value="" />
+            {documents.map((doc) => (
+              <Picker.Item key={doc.id} label={doc.name_document} value={doc.id} />
+            ))}
           </Picker>
         </View>
-        <Text style={styles.text}>Cargo en la empresa:</Text>
+        <TouchableOpacity onPress={handleDocumentPick}>
+          <Text style={styles.buttonText}>{document ? document.name : 'Selecciona un Documento'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.text}>Selecciona la Posición:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idPosition}
+            onValueChange={(itemValue) => setIdPosition(itemValue)}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdPosition(itemValue)}
           >
-            <Picker.Item label="Seleccione una Opción" />
-            {/* Agrega aquí las opciones del Picker */}
+            <Picker.Item label="Seleccione una Opción" value="" />
+            {positions.map((pos) => (
+              <Picker.Item key={pos.id} label={pos.name_position} value={pos.id} />
+            ))}
           </Picker>
         </View>
-        <Text style={styles.text}>Centro:</Text>
+        <Text style={styles.text}>Selecciona la Sucursal:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idBranch}
+            onValueChange={(itemValue) => setIdBranch(itemValue)}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdBranch(itemValue)}
           >
-            <Picker.Item label="Seleccione una Opción" />
-            {/* Agrega aquí las opciones del Picker */}
+            <Picker.Item label="Seleccione una Opción" value="" />
+            {branches.map((branch) => (
+              <Picker.Item key={branch.id} label={branch.name_branch} value={branch.id} />
+            ))}
           </Picker>
         </View>
-        <Text style={styles.text}>Departamento:</Text>
+        <Text style={styles.text}>Selecciona el Departamento:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idDepartment}
+            onValueChange={(itemValue) => setIdDepartment(itemValue)}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdDepartment(itemValue)}
           >
-            <Picker.Item label="Seleccione una Opción" />
-            {/* Agrega aquí las opciones del Picker */}
+            <Picker.Item label="Seleccione una Opción" value="" />
+            {departments.map((dept) => (
+              <Picker.Item key={dept.id} label={dept.name_departament} value={dept.id} />
+            ))}
           </Picker>
         </View>
         <Text style={styles.text}>Fecha de Inicio:</Text>
-        <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
-          <Text style={styles.buttonText}>Seleccionar Fecha</Text>
+        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+          <Text style={styles.buttonText}>{dateStart.toDateString()}</Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
             value={dateStart}
             mode="date"
             display="default"
-            onChange={(event, selectedDate) => {
-              setShowDatePicker(false);
-              setDateStart(selectedDate || dateStart);
-            }}
+            onChange={onChangeDate}
           />
         )}
-        <Text style={styles.text}>Tipo de Contrato:</Text>
+        <Text style={styles.text}>Selecciona el Contrato:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idContract}
+            onValueChange={(itemValue) => setIdContract(itemValue)}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdContract(itemValue)}
           >
-            <Picker.Item label="Seleccione una Opción" />
-            <Picker.Item label="Prácticas" value="1" />
-            <Picker.Item label="Indefinido" value="2" />
-            <Picker.Item label="Temporal" value="3" />
-            <Picker.Item label="Capacitación y aprendizaje" value="4" />
+            <Picker.Item label="Seleccione una Opción" value="" />
+            {contracts.map((contract) => (
+              <Picker.Item key={contract.id} label={contract.name_contrat} value={contract.id} />
+            ))}
           </Picker>
         </View>
-        <Text style={styles.text}>Puesto Laboral:</Text>
+        <Text style={styles.text}>Selecciona el Título del Trabajo:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idJobTitle}
+            onValueChange={(itemValue) => setIdJobTitle(itemValue)}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdJobTitle(itemValue)}
           >
-            <Picker.Item label="Seleccione una Opción" />
-            {/* Agrega aquí las opciones del Picker */}
+            <Picker.Item label="Seleccione una Opción" value="" />
+            {jobTitles.map((title) => (
+              <Picker.Item key={title.id} label={title.name_jobTitle} value={title.id} />
+            ))}
           </Picker>
         </View>
-        <Text style={styles.text}>Rol:</Text>
+        <Text style={styles.text}>Selecciona el Rol:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idRole}
+            onValueChange={(itemValue) => setIdRole(itemValue)}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdRole(itemValue)}
           >
-            <Picker.Item label="Seleccione una Opción" />
+            <Picker.Item label="Seleccione una Opción" value="" />
             <Picker.Item label="Super Administrador" value="1" />
             <Picker.Item label="Jefe de Área" value="2" />
             <Picker.Item label="Trabajador" value="3" />
             <Picker.Item label="Cliente" value="4" />
           </Picker>
         </View>
-        <Text style={styles.text}>Selecciona un Status:</Text>
+        <Text style={styles.text}>Selecciona el Estado:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idStatus}
+            onValueChange={(itemValue) => setIdStatus(itemValue)}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdStatus(itemValue)}
           >
-            <Picker.Item label="Seleccione una Opción" />
+            <Picker.Item label="Seleccione una Opción" value="" />
             <Picker.Item label="Activo" value="1" />
             <Picker.Item label="Inactivo" value="2" />
             <Picker.Item label="Suspendido" value="3" />
           </Picker>
         </View>
-        <Button title="Crear Usuario" onPress={registerUser} color="green" />
+        <TouchableOpacity onPress={registerUser} style={styles.button}>
+          <Text style={styles.buttonText}>Registrar Usuario</Text>
+        </TouchableOpacity>
       </ScrollView>
     </ImageBackground>
   );
@@ -219,51 +350,50 @@ const CreateUserScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
   },
   container: {
-    flexGrow: 1,
     padding: 20,
-    alignItems: 'center',
-  },
-  input: {
-    width: '100%',
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    marginBottom: 10,
-    color: 'white',
   },
   text: {
     color: 'white',
-    fontSize: 16,
-    marginBottom: 5,
-    textAlign: 'left',
-    width: '100%',
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    color: 'white',
+    marginBottom: 10,
   },
   pickerContainer: {
-    width: '100%',
-    borderWidth: 1,
     borderColor: 'gray',
+    borderWidth: 1,
     borderRadius: 5,
     marginBottom: 10,
   },
   picker: {
-    height: 50,
+    height: 40,
     width: '100%',
     color: 'white',
   },
   dateButton: {
-    backgroundColor: 'green',
+    backgroundColor: '#007BFF',
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    padding: 15,
+    borderRadius: 5,
     alignItems: 'center',
-    width: '100%',
   },
   buttonText: {
     color: 'white',
+    fontSize: 18,
   },
 });
 
