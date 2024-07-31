@@ -7,11 +7,15 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // Asegúrate de usar 
 const AreaManagerScreen = ({ navigation }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [name, setName] = useState('');
+  const [lastname, setLastname] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem('name').then((value) => {
       setName(value);
+    });
+    AsyncStorage.getItem('lastname').then((value) => {
+      setLastname(value);
     });
   }, []);
 
@@ -19,6 +23,7 @@ const AreaManagerScreen = ({ navigation }) => {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('role');
     await AsyncStorage.removeItem('name');
+    await AsyncStorage.removeItem('lastname');
     navigation.navigate('Login');
   };
 
@@ -59,7 +64,7 @@ const AreaManagerScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.menuButton} onPress={toggleMenu}>
             <Icon name="bars" size={35} color="white" />
           </TouchableOpacity>
-          <Text style={styles.title}>Bienvenido {'\n'} {name}</Text>
+          <Text style={styles.title}>Bienvenido {'\n'} {name} {lastname} </Text>
         </View>
         {menuVisible && (
           <View style={styles.menu}>
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: 'absolute',
-    top: 70,
+    top: 80,
     left: 20,
     right: 20,
     backgroundColor: '#717171',

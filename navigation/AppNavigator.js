@@ -3,6 +3,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import Login2Screen from '../screens/DEXTEK2/Login2Screen';
+
 import LoginScreen from '../screens/LoginScreen';
 import SuperAdminScreen from '../screens/SuperAdminScreen';
 import AreaManagerScreen from '../screens/AreaManagerScreen';
@@ -48,6 +50,7 @@ const AppNavigator = () => {
           headerTitleAlign: 'center',
         }}
       >
+
         <Stack.Screen
           name="Login"
           component={LoginScreen}

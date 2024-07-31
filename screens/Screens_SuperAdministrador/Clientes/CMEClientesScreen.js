@@ -10,7 +10,7 @@ const CMEClientes = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetch('https://apidextek.fragomx.com/api/auth/clientes')
+    fetch('http://192.168.100.7:3000/api/auth/clientes')
       .then(response => response.json())
       .then(clientesData => {
         setClientes(clientesData);
@@ -37,7 +37,7 @@ const CMEClientes = ({ navigation }) => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    fetch('https://apidextek.fragomx.com/api/auth/clientes')
+    fetch('http://192.168.100.7:3000/api/auth/clientes')
       .then(response => response.json())
       .then(clientesData => {
         setClientes(clientesData);
@@ -50,7 +50,7 @@ const CMEClientes = ({ navigation }) => {
   };
 
   const deleteCliente = (clienteId) => {
-    fetch(`https://apidextek.fragomx.com/api/auth/eliminarcliente/${clienteId}`, {
+    fetch(`http://192.168.100.7:3000/api/auth/eliminarcliente/${clienteId}`, {
       method: 'DELETE',
     })
       .then(response => response.json())
