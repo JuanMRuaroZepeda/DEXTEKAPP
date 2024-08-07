@@ -119,22 +119,22 @@ const CMEProyectos = ({ navigation }) => {
         />
         <View style={styles.container}>
           {(searchQuery.length > 0 ? filteredProjects : projects).map(project => (
-            <View key={project.id} style={styles.projectCard}>
-              <Text style={styles.projectText}>Nombre: {project.name_project}</Text>
-              <Text style={styles.projectText}>Descripción: {project.description}</Text>
-              <Text style={styles.projectText}>Fecha límite: {project.deadline}</Text>
-              <Text style={styles.projectText}>Estado: {project.name_status}</Text>
-              <Text style={styles.projectText}>Usuario: {project.user_name}</Text>
-              <Text style={styles.projectText}>Cliente: {project.client_name}</Text>
+            <View key={project.id} style={styles.userCard}>
+              <Text style={styles.userText}>Nombre: {project.name_project}</Text>
+              <Text style={styles.userText}>Descripción: {project.description}</Text>
+              <Text style={styles.userText}>Fecha límite: {project.deadline}</Text>
+              <Text style={styles.userText}>Estado: {project.name_status}</Text>
+              <Text style={styles.userText}>Usuario: {project.user_name}</Text>
+              <Text style={styles.userText}>Cliente: {project.client_name}</Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity 
-                  style={styles.editButton} 
+                  style={styles.buttonUpdate} 
                   onPress={() => navigation.navigate('UpdateProyecto', { projectId: project.id })}
                 >
                   <Icon name="pencil" size={20} color="#fff" />
                 </TouchableOpacity>
                 <TouchableOpacity 
-                  style={styles.deleteButton} 
+                  style={styles.buttonDelete} 
                   onPress={() => confirmDeleteProject(project.id)}
                 >
                   <Icon name="trash" size={20} color="#fff" />
@@ -157,50 +157,75 @@ const CMEProyectos = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    width: '100%',
+    height: '100%',
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    margin: 10,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  projectCard: {
-    top: 10,
-    backgroundColor: 'gray',
-    padding: 15,
-    marginVertical: 10,
-    borderRadius: 10,
-    width: '90%',
-    alignSelf: 'center',
-  },
-  projectText: {
+  text: {
+    fontSize: 22,
     color: 'white',
+    fontWeight: 'bold',
+    marginVertical: 20,
+    textAlign: 'center',
+  },
+  searchInput: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    borderRadius: 10,
+    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  userCard: {
+    backgroundColor: 'rgba(10, 20, 20, 0.7)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+  },
+  userText: {
+    color: 'white',
+    fontSize: 16,
     marginBottom: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: 10,
   },
-  editButton: {
-    backgroundColor: '#D9E04F',
+  button: {
+    backgroundColor: '#4CAF50',
     padding: 10,
     borderRadius: 5,
-    marginRight: 10,
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 5,
   },
-  deleteButton: {
-    backgroundColor: 'red',
+  buttonDelete: {
+    backgroundColor: '#F44336',
     padding: 10,
     borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginLeft: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonUpdate: {
+    backgroundColor: '#F9C806',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   fab: {
     position: 'absolute',
-    right: 145,
+    right: 150,
     bottom: 20,
     width: 60,
     height: 60,
@@ -209,22 +234,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
+  buttonText: {
     color: 'white',
-    alignSelf: 'center',
-    fontSize: 35,
-    top: 10,
+    fontSize: 16,
   },
-  searchInput: {
-    height: 40,
-    top: 20,
-    borderColor: 'white',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    color: 'white',
-    alignSelf: 'center',
-    width: '90%',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

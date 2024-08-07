@@ -15,34 +15,18 @@ const CreateProyectoScreen = ({ navigation }) => {
   const [status, setStatus] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
-  const [showDatePicker, setShowDatePicker] = useState(false); // Estado para controlar la visibilidad del DatePicker
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
-    // Tu lógica para obtener status, clientes y usuarios
-    fetchStatus();
     fetchClientes();
     fetchUsuarios();
   }, []);
-
-  const fetchStatus = () => {
-
-    fetch('http://192.168.100.7:3000/api/auth/status')
-
-      .then(response => response.json())
-      .then(data => {
-        setStatus(data);
-      })
-      .catch(error => {
-        console.error('Error fetching status:', error);
-        Alert.alert('Error', 'No se pudo obtener el estado del proyecto.');
-      });
-  };
 
   const fetchClientes = () => {
     fetch('http://192.168.100.7:3000/api/auth/clientes')
       .then(response => response.json())
       .then(data => {
-        setClientes(data);
+        setClientes(Array.isArray(data) ? data : []);
       })
       .catch(error => {
         console.error('Error fetching clientes:', error);
@@ -51,12 +35,10 @@ const CreateProyectoScreen = ({ navigation }) => {
   };
 
   const fetchUsuarios = () => {
-
     fetch('http://192.168.100.7:3000/api/auth/usersrole3')
-
       .then(response => response.json())
       .then(data => {
-        setUsuarios(data);
+        setUsuarios(Array.isArray(data) ? data : []);
       })
       .catch(error => {
         console.error('Error fetching usuarios:', error);
@@ -105,7 +87,7 @@ const CreateProyectoScreen = ({ navigation }) => {
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || deadline;
-    setShowDatePicker(false); // Ocultar el DatePicker después de seleccionar una fecha
+    setShowDatePicker(false);
     setDeadline(currentDate);
   };
 
@@ -137,18 +119,13 @@ const CreateProyectoScreen = ({ navigation }) => {
           onChangeText={text => setDescription(text)}
         />
         <Text style={styles.text}>Fecha de Entrega:</Text>
-        <TouchableOpacity
-          style={styles.datePickerButton}
-          onPress={() => setShowDatePicker(true)} // Mostrar el DatePicker al presionar el botón
-        >
-          <Text style={styles.buttonText}>Seleccionar Fecha Límite</Text>
+        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+          <Text style={styles.buttonText}>{deadline.toDateString()}</Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
-            testID="dateTimePicker"
             value={deadline}
             mode="date"
-            is24Hour={true}
             display="default"
             onChange={onChangeDate}
           />
@@ -164,6 +141,7 @@ const CreateProyectoScreen = ({ navigation }) => {
             <Picker.Item label="Activo" value="1" />
             <Picker.Item label="Inactivo" value="2" />
             <Picker.Item label="Suspendido" value="3" />
+            <Picker.Item label="En Proceso" value="4" />
           </Picker>
         </View>
         <Text style={styles.text}>Selecciona un Encargado:</Text>
@@ -192,7 +170,7 @@ const CreateProyectoScreen = ({ navigation }) => {
             ))}
           </Picker>
         </View>
-        <Button title="Crear Proyecto" onPress={createProject} buttonStyle={styles.createButton} />
+        <Button title="Crear Proyecto" onPress={createProject} buttonStyle={styles.button2} />
       </ScrollView>
     </ImageBackground>
   );
@@ -201,55 +179,56 @@ const CreateProyectoScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
   },
   container: {
-    flexGrow: 1,
-    justifyContent: 'top',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: 'white',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    color: 'white',
+    padding: 20,
   },
   text: {
     color: 'white',
-    marginBottom: 8,
-  },
-  datePickerButton: {
-    backgroundColor: 'gray',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: 'white',
     fontSize: 18,
-    textAlign: 'center',
+    marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    color: 'white',
+    marginBottom: 10,
   },
   pickerContainer: {
-    borderColor: 'white',
+    borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 12,
+    borderRadius: 5,
+    marginBottom: 10,
   },
   picker: {
     height: 40,
+    width: '100%',
     color: 'white',
   },
-  createButton: {
-    backgroundColor: 'green',
+  dateButton: {
+    backgroundColor: 'red',
+    padding: 10,
     borderRadius: 5,
-    marginTop: 20,
+    marginBottom: 10,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  button: {
+    backgroundColor: 'red', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
+  },
+  buttonText: {
+    color: 'white', // Cambia el color del texto a blanco para contrastar con el fondo rojo
+    fontSize: 16, // Ajusta el tamaño de la fuente según tus necesidades
+  },
+  button2: {
+    backgroundColor: 'green', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
   },
 });
 
