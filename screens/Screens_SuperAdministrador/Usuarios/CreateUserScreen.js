@@ -4,7 +4,6 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
 import axios from 'axios';
-import * as FileSystem from 'expo-file-system';
 
 const CreateUserScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -232,8 +231,10 @@ const CreateUserScreen = ({ navigation }) => {
             ))}
           </Picker>
         </View>
-        <TouchableOpacity onPress={handleDocumentPick}>
-          <Text style={styles.buttonText}>{document ? document.name : 'Selecciona un Documento'}</Text>
+        <TouchableOpacity onPress={handleDocumentPick} style={styles.button}>
+          <Text style={styles.buttonText}>
+            {document ? document.name : 'Selecciona un Documento'}
+          </Text>
         </TouchableOpacity>
         <Text style={styles.text}>Selecciona la Posición:</Text>
         <View style={styles.pickerContainer}>
@@ -339,7 +340,7 @@ const CreateUserScreen = ({ navigation }) => {
             <Picker.Item label="Suspendido" value="3" />
           </Picker>
         </View>
-        <TouchableOpacity onPress={registerUser} style={styles.button}>
+        <TouchableOpacity onPress={registerUser} style={styles.button2}>
           <Text style={styles.buttonText}>Registrar Usuario</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -380,20 +381,26 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   dateButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: 'red',
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#007BFF',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
+    backgroundColor: 'red', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
   },
   buttonText: {
-    color: 'white',
-    fontSize: 18,
+    color: 'white', // Cambia el color del texto a blanco para contrastar con el fondo rojo
+    fontSize: 16, // Ajusta el tamaño de la fuente según tus necesidades
+  },
+  button2: {
+    backgroundColor: 'green', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
   },
 });
 

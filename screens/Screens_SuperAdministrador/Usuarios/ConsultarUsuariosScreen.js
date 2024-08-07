@@ -7,9 +7,21 @@ const ConsultarUsuarios = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  
+  // Estados para datos adicionales
+  const [positions, setPositions] = useState([]);
+  const [branches, setBranches] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [contracts, setContracts] = useState([]);
+  const [jobTitles, setJobTitles] = useState([]);
 
   useEffect(() => {
     fetchUsers();
+    fetchPositions();
+    fetchBranches();
+    fetchDepartments();
+    fetchContracts();
+    fetchJobTitles();
   }, []);
 
   useEffect(() => {
@@ -27,7 +39,7 @@ const ConsultarUsuarios = ({ navigation }) => {
       (getStatusText(user.id_status) || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredUsers(filtered);
-  }, [searchQuery, users]);
+  }, [searchQuery, users, positions, branches, departments, contracts, jobTitles]);
 
   const fetchUsers = () => {
     fetch('http://192.168.100.7:3000/api/auth/usuarios2')
@@ -48,49 +60,79 @@ const ConsultarUsuarios = ({ navigation }) => {
     setRefreshing(false);
   };
 
+  const fetchPositions = () => {
+    fetch('http://192.168.100.7:3000/api/auth/positions')
+      .then(response => response.json())
+      .then(data => setPositions(data))
+      .catch(error => {
+        console.error('Error fetching Positions:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de posiciones.');
+      });
+  };
+
+  const fetchBranches = () => {
+    fetch('http://192.168.100.7:3000/api/auth/sucursales')
+      .then(response => response.json())
+      .then(data => setBranches(data))
+      .catch(error => {
+        console.error('Error fetching Branches:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de sucursales.');
+      });
+  };
+
+  const fetchDepartments = () => {
+    fetch('http://192.168.100.7:3000/api/auth/departamentos')
+      .then(response => response.json())
+      .then(data => setDepartments(data))
+      .catch(error => {
+        console.error('Error fetching Departments:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de departamentos.');
+      });
+  };
+
+  const fetchContracts = () => {
+    fetch('http://192.168.100.7:3000/api/auth/contratos')
+      .then(response => response.json())
+      .then(data => setContracts(data))
+      .catch(error => {
+        console.error('Error fetching Contracts:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de contratos.');
+      });
+  };
+
+  const fetchJobTitles = () => {
+    fetch('http://192.168.100.7:3000/api/auth/jobstitles')
+      .then(response => response.json())
+      .then(data => setJobTitles(data))
+      .catch(error => {
+        console.error('Error fetching JobTitles:', error);
+        Alert.alert('Error', 'No se pudo obtener la lista de títulos de trabajo.');
+      });
+  };
+
   const getPositionText = (positionId) => {
-    switch (positionId) {
-      case 1: return 'Manager';
-      case 2: return 'Developer';
-      case 3: return 'Designer';
-      default: return 'Desconocido';
-    }
+    const position = positions.find(p => p.id === positionId);
+    return position ? position.name_position : 'Desconocido';
   };
 
   const getBranchText = (branchId) => {
-    switch (branchId) {
-      case 1: return 'New York';
-      case 2: return 'Los Angeles';
-      case 3: return 'Chicago';
-      default: return 'Desconocido';
-    }
+    const branch = branches.find(b => b.id === branchId);
+    return branch ? branch.name_branch : 'Desconocido';
   };
 
   const getDepartmentText = (departmentId) => {
-    switch (departmentId) {
-      case 1: return 'IT';
-      case 2: return 'HR';
-      case 3: return 'Sales';
-      default: return 'Desconocido';
-    }
+    const department = departments.find(d => d.id === departmentId);
+    return department ? department.name_departament : 'Desconocido';
   };
 
   const getContractText = (contractId) => {
-    switch (contractId) {
-      case 1: return 'Full-time';
-      case 2: return 'Part-time';
-      case 3: return 'Freelance';
-      default: return 'Desconocido';
-    }
+    const contract = contracts.find(c => c.id === contractId);
+    return contract ? contract.name_contrat : 'Desconocido';
   };
 
   const getJobTitleText = (jobTitleId) => {
-    switch (jobTitleId) {
-      case 1: return 'Senior Developer';
-      case 2: return 'Junior Developer';
-      case 3: return 'Intern';
-      default: return 'Desconocido';
-    }
+    const jobTitle = jobTitles.find(j => j.id === jobTitleId);
+    return jobTitle ? jobTitle.name_jobTitle : 'Desconocido';
   };
 
   const getRoleText = (roleId) => {
@@ -170,84 +212,104 @@ const ConsultarUsuarios = ({ navigation }) => {
               <Text style={styles.userText}>Nombre: {user.name || ''}</Text>
               <Text style={styles.userText}>Apellido: {user.lastname || ''}</Text>
               <Text style={styles.userText}>Usuario: {user.username || ''}</Text>
-              <Text style={styles.userText}>Posición: {getPositionText(user.id_positionCompany) || ''}</Text>
-              <Text style={styles.userText}>Sucursal: {getBranchText(user.id_branch) || ''}</Text>
-              <Text style={styles.userText}>Departamento: {getDepartmentText(user.id_department) || ''}</Text>
-              <Text style={styles.userText}>Fecha de Inicio: {user.date_start || ''}</Text>
-              <Text style={styles.userText}>Contrato: {getContractText(user.id_contract) || ''}</Text>
-              <Text style={styles.userText}>Título del Trabajo: {getJobTitleText(user.id_jobTitle) || ''}</Text>
-              <Text style={styles.userText}>Rol: {getRoleText(user.id_role) || ''}</Text>
-              <Text style={styles.userText}>Status: {getStatusText(user.id_status) || ''}</Text>
+              <Text style={styles.userText}>Posición: {getPositionText(user.id_positionCompany)}</Text>
+              <Text style={styles.userText}>Sucursal: {getBranchText(user.id_branch)}</Text>
+              <Text style={styles.userText}>Departamento: {getDepartmentText(user.id_department)}</Text>
+              <Text style={styles.userText}>Contrato: {getContractText(user.id_contract)}</Text>
+              <Text style={styles.userText}>Título: {getJobTitleText(user.id_jobTitle)}</Text>
+              <Text style={styles.userText}>Rol: {getRoleText(user.id_role)}</Text>
+              <Text style={styles.userText}>Estado: {getStatusText(user.id_status)}</Text>
             </View>
           ))}
         </View>
       </ScrollView>
-    </ImageBackground>
+      </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    width: '100%',
+    height: '100%',
   },
   container: {
     flex: 1,
-    marginHorizontal: 10,
-    marginTop: 10,
-  },
-  userCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 10,
-    marginHorizontal: 10,
-  },
-  userText: {
-    fontSize: 16,
-    color: 'black',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  editButton: {
-    backgroundColor: '#F8DC6B',
-    padding: 10,
-    borderRadius: 5,
-  },
-  deleteButton: {
-    backgroundColor: '#EC4B4B',
-    padding: 10,
-    borderRadius: 5,
-  },
-  fab: {
-    position: 'absolute',
-    width: 60,
-    height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    right: 140,
-    bottom: 30,
-    backgroundColor: 'green',
-    borderRadius: 60,
-    elevation: 10,
+    margin: 10,
   },
   text: {
+    fontSize: 22,
     color: 'white',
-    fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginVertical: 20,
     textAlign: 'center',
   },
   searchInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 5,
-    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     color: 'white',
-    marginBottom: 20,
-    alignSelf: 'center',
-    width: '90%',
+    borderRadius: 10,
+    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  userCard: {
+    backgroundColor: 'rgba(10, 20, 20, 0.7)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+  },
+  userText: {
+    color: 'white',
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  button: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 5,
+  },
+  buttonDelete: {
+    backgroundColor: '#F44336',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginLeft: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonUpdate: {
+    backgroundColor: '#F9C806',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fab: {
+    position: 'absolute',
+    right: 150,
+    bottom: 20,
+    width: 60,
+    height: 60,
+    backgroundColor: 'green',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
   },
   loadingContainer: {
     flex: 1,
@@ -255,4 +317,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
 export default ConsultarUsuarios;

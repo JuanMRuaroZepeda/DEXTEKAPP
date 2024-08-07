@@ -1,7 +1,7 @@
 // LoginScreen.js
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dimensions } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dimensions, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
@@ -12,7 +12,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (!username || !password) {
-      alert('Por favor ingresa el usuario y la contraseña.');
+      Alert.alert('Datos Incompletos','Por favor ingresa el usuario y la contraseña.');
       return;
     }
     try {
@@ -58,13 +58,13 @@ const LoginScreen = ({ navigation }) => {
         }
 
         if (idStatus === '2') {
-          alert('Cuenta Eliminada');
+          Alert.alert('Atención!','Cuenta Eliminada');
           return;
         } else if (idStatus === '3') {
-          alert('Cuenta Suspendida');
+          Alert.alert('Atención!','Cuenta Suspendida');
           return;
         } else if (idStatus !== '1') {
-          alert('Estado de cuenta no válido');
+          Alert.alert('Atención!','Estado de cuenta no válido');
           return;
         }
 
@@ -82,14 +82,14 @@ const LoginScreen = ({ navigation }) => {
             navigation.navigate('Client', { name: data.name, lastname: data.lastname });
             break;
           default:
-            alert('Rol no reconocido');
+            Alert.alert('Atención!','Rol no reconocido');
         }
       } else {
-        alert('Usuario no Encontrado');
+        Alert.alert('Atención!','Usuario no Encontrado');
       }
     } catch (error) {
       console.error(error);
-      alert('Error en la conexión con la API');
+      Alert.alert('Error en el Servidor','Error en la conexión con la API');
     }
   };
 
