@@ -1,8 +1,9 @@
 // LoginScreen.js
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dimensions, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dimensions, Alert, Touchable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const { width } = Dimensions.get('window');
 
@@ -116,7 +117,9 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Contraseña"
           placeholderTextColor="#aaa"
         />
-        <Button title="Iniciar Sesión" onPress={handleLogin} color="red" />
+        <TouchableOpacity onPress={handleLogin} style={styles.buttonaccess}>
+          <Text style={styles.buttonText}>Iniciar Sesión</Text>
+        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -134,8 +137,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   logo: {
-    width: width * 0.5,
-    aspectRatio: 2.9,
+    width: width * 0.8, // Ajusta el tamaño del logo aquí
+    height: undefined,
+    aspectRatio: 2.9, // Mantiene la relación de aspecto
     alignSelf: 'center',
     marginBottom: 20,
     borderRadius: 5,
@@ -148,11 +152,22 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'white',
+    borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
+    borderRadius: 5,
+    paddingHorizontal: 10,
     color: 'white',
+    marginBottom: 10,
+  },
+  buttonaccess: {
+    backgroundColor: 'red', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
+  },
+  buttonText: {
+    color: 'white', // Cambia el color del texto a blanco para contrastar con el fondo rojo
+    fontSize: 16, // Ajusta el tamaño de la fuente según tus necesidades
   },
 });
 

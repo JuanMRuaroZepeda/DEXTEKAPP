@@ -112,14 +112,14 @@ const ConsultarTareas = ({ navigation }) => {
         />
         <View style={styles.container}>
           {(searchQuery.length > 0 ? filteredTasks : tasks).map(task => (
-            <View key={task.id} style={styles.projectCard}>
-              <Text style={styles.taskText}>Nombre: {task.name_task}</Text>
-              <Text style={styles.taskText}>Descripción: {task.description}</Text>
-              <Text style={styles.taskText}>Fecha Limite: {task.deadline}</Text>
-              <Text style={styles.taskText}>Estado: {task.name_status}</Text>
-              <Text style={styles.taskText}>Usuario: {task.name_user }</Text>
-              <Text style={styles.taskText}>Cliente: {task.name_client }</Text>
-              <Text style={styles.taskText}>Proyecto: {task.name_project}</Text>
+            <View key={task.id} style={styles.userCard}>
+              <Text style={styles.userText}>Nombre: {task.name_task}</Text>
+              <Text style={styles.userText}>Descripción: {task.description}</Text>
+              <Text style={styles.userText}>Fecha Limite: {task.deadline}</Text>
+              <Text style={styles.userText}>Estado: {task.name_status}</Text>
+              <Text style={styles.userText}>Usuario: {task.name_user }</Text>
+              <Text style={styles.userText}>Cliente: {task.name_client }</Text>
+              <Text style={styles.userText}>Proyecto: {task.name_project}</Text>
             </View>
           ))}
         </View>
@@ -131,70 +131,89 @@ const ConsultarTareas = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '100%',
+    height: '100%',
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    margin: 10,
   },
   text: {
+    fontSize: 22,
     color: 'white',
-    alignSelf: 'center',
-    fontSize: 35,
-    marginVertical: 10,
+    fontWeight: 'bold',
+    marginVertical: 20,
+    textAlign: 'center',
   },
   searchInput: {
-    height: 40,
-    borderColor: 'white',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     color: 'white',
-    alignSelf: 'center',
-    width: '90%',
-  },
-  projectCard: {
-    backgroundColor: 'gray',
-    padding: 15,
-    marginVertical: 10,
     borderRadius: 10,
-    width: '90%',
-    alignSelf: 'center',
+    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
-  taskText: {
+  userCard: {
+    backgroundColor: 'rgba(10, 20, 20, 0.7)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+  },
+  userText: {
     color: 'white',
+    fontSize: 16,
     marginBottom: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: 10,
   },
-  editButton: {
-    backgroundColor: '#D9E04F',
+  button: {
+    backgroundColor: '#4CAF50',
     padding: 10,
     borderRadius: 5,
-    marginRight: 10,
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 5,
   },
-  deleteButton: {
-    backgroundColor: 'red',
+  buttonDelete: {
+    backgroundColor: '#F44336',
     padding: 10,
     borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginLeft: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonUpdate: {
+    backgroundColor: '#F9C806',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   fab: {
     position: 'absolute',
-    right: 145,
+    right: 150,
     bottom: 20,
     width: 60,
     height: 60,
     backgroundColor: 'green',
     borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -144,7 +144,7 @@ const CreateClienteScreen = ({ navigation }) => {
                 </View>
                 <Button
                     title="Crear Cliente"
-                    buttonStyle={styles.createButton}
+                    buttonStyle={styles.button2}
                     onPress={createCliente}
                 />
             </ScrollView>
@@ -155,45 +155,57 @@ const CreateClienteScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        resizeMode: 'cover',
-    },
-    container: {
-        flexGrow: 1,
-        justifyContent: 'flex-start',
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-    },
-    input: {
+      },
+      container: {
+        padding: 20,
+      },
+      text: {
+        color: 'white',
+        fontSize: 18,
+        marginBottom: 10,
+      },
+      input: {
         height: 40,
-        borderColor: 'white',
+        borderColor: 'gray',
         borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
-        color: 'white',
-    },
-    text: {
-        color: 'white',
-        marginBottom: 8,
-    },
-    pickerContainer: {
-        borderColor: 'white',
-        borderWidth: 1,
-        marginBottom: 12,
-    },
-    picker: {
-        height: 40,
-        color: 'white',
-    },
-    createButton: {
-        backgroundColor: 'green',
         borderRadius: 5,
-        marginTop: 20,
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+        paddingHorizontal: 10,
+        color: 'white',
+        marginBottom: 10,
+      },
+      pickerContainer: {
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 10,
+      },
+      picker: {
+        height: 40,
+        width: '100%',
+        color: 'white',
+      },
+      dateButton: {
+        backgroundColor: 'red',
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 10,
+      },
+      button: {
+        backgroundColor: 'red', // Establece el color de fondo rojo
+        padding: 10, // Ajusta el padding según tus necesidades
+        borderRadius: 5, // Opcional: agrega bordes redondeados
+        alignItems: 'center', // Opcional: centra el texto
+      },
+      buttonText: {
+        color: 'white', // Cambia el color del texto a blanco para contrastar con el fondo rojo
+        fontSize: 16, // Ajusta el tamaño de la fuente según tus necesidades
+      },
+      button2: {
+        backgroundColor: 'green', // Establece el color de fondo rojo
+        padding: 10, // Ajusta el padding según tus necesidades
+        borderRadius: 5, // Opcional: agrega bordes redondeados
+        alignItems: 'center', // Opcional: centra el texto
+      },
 });
 
 export default CreateClienteScreen;

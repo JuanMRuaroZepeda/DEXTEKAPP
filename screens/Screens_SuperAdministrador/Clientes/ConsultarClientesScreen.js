@@ -76,14 +76,14 @@ const ConsultarClientes = ({ navigation }) => {
         />
         <View style={styles.container}>
           {(searchQuery.length > 0 ? filteredClientes : clientes).map(cliente => (
-            <View key={cliente.id} style={styles.card}>
-              <Text style={styles.text}>Nombre del Contacto: {cliente.contac_name}</Text>
-              <Text style={styles.text}>Correo Electronico: {cliente.contac_email}</Text>
-              <Text style={styles.text}>Numero de Telefono: {cliente.contac_number}</Text>
-              <Text style={styles.text}>Nombre de la Compañia: {cliente.company_name}</Text>
-              <Text style={styles.text}>Dirección: {cliente.company_address}</Text>
-              <Text style={styles.text}>Numero de la Compañia: {cliente.company_number}</Text>
-              <Text style={styles.text}>Sucursal: {cliente.name_branch}</Text>
+            <View key={cliente.id} style={styles.userCard}>
+              <Text style={styles.userText}>Nombre del Contacto: {cliente.contac_name}</Text>
+              <Text style={styles.userText}>Correo Electronico: {cliente.contac_email}</Text>
+              <Text style={styles.userText}>Numero de Telefono: {cliente.contac_number}</Text>
+              <Text style={styles.userText}>Nombre de la Compañia: {cliente.company_name}</Text>
+              <Text style={styles.userText}>Dirección: {cliente.company_address}</Text>
+              <Text style={styles.userText}>Numero de la Compañia: {cliente.company_number}</Text>
+              <Text style={styles.userText}>Sucursal: {cliente.name_branch}</Text>
             </View>
           ))}
         </View>
@@ -95,50 +95,75 @@ const ConsultarClientes = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    width: '100%',
+    height: '100%',
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card: {
-    top: 10,
-    backgroundColor: 'gray',
-    padding: 15,
-    marginVertical: 10,
-    borderRadius: 10,
-    width: '90%',
-    alignSelf: 'center',
+    margin: 10,
   },
   text: {
+    fontSize: 22,
     color: 'white',
+    fontWeight: 'bold',
+    marginVertical: 20,
+    textAlign: 'center',
+  },
+  searchInput: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    borderRadius: 10,
+    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  userCard: {
+    backgroundColor: 'rgba(10, 20, 20, 0.7)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+  },
+  userText: {
+    color: 'white',
+    fontSize: 16,
     marginBottom: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: 10,
   },
-  editButton: {
-    backgroundColor: '#D9E04F',
+  button: {
+    backgroundColor: '#4CAF50',
     padding: 10,
     borderRadius: 5,
-    marginRight: 10,
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 5,
   },
-  deleteButton: {
-    backgroundColor: 'red',
+  buttonDelete: {
+    backgroundColor: '#F44336',
     padding: 10,
     borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginLeft: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonUpdate: {
+    backgroundColor: '#F9C806',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   fab: {
     position: 'absolute',
-    right: 145,
+    right: 150,
     bottom: 20,
     width: 60,
     height: 60,
@@ -147,22 +172,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  searchInput: {
-    height: 40,
-    top: 20,
-    borderColor: 'white',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
+  buttonText: {
     color: 'white',
-    alignSelf: 'center',
-    width: '90%',
+    fontSize: 16,
   },
-  texttitle: {
-    color: 'white',
-    alignSelf: 'center',
-    fontSize: 35,
-    top: 10,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

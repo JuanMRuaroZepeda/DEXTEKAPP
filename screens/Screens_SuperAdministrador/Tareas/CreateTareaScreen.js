@@ -140,22 +140,17 @@ const CreateTareaScreen = ({ navigation }) => {
           onChangeText={text => setDescription(text)}
         />
         <Text style={styles.text}>Fecha de Entrega:</Text>
-        <TouchableOpacity
-          style={styles.datePickerButton}
-          onPress={() => setShowDatePicker(true)}
-        >
-          <Text style={styles.buttonText}>Seleccionar Fecha Límite</Text>
-        </TouchableOpacity>
-        {showDatePicker && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={deadline}
-            mode="date"
-            is24Hour={true}
-            display="default"
-            onChange={onChangeDate}
-          />
-        )}
+        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+        <Text style={styles.buttonText}>{deadline.toDateString()}</Text>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={deadline}
+          mode="date"
+          display="default"
+          onChange={onChangeDate}
+        />
+      )}
         <Text style={styles.text}>Selecciona un Status:</Text>
         <View style={styles.pickerContainer}>
           <Picker
@@ -208,7 +203,7 @@ const CreateTareaScreen = ({ navigation }) => {
             ))}
           </Picker>
         </View>
-        <Button title="Crear Tarea" onPress={createTask} buttonStyle={styles.createButton} />
+        <Button title="Crear Tarea" onPress={createTask} buttonStyle={styles.button2} />
       </ScrollView>
     </ImageBackground>
   );
@@ -217,53 +212,56 @@ const CreateTareaScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
   },
   container: {
-    flexGrow: 1,
-    justifyContent: 'top',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: 'white',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    color: 'white',
+    padding: 20,
   },
   text: {
     color: 'white',
-    marginBottom: 8,
-  },
-  datePickerButton: {
-    backgroundColor: 'gray',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: 'white',
     fontSize: 18,
-    textAlign: 'center',
+    marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    color: 'white',
+    marginBottom: 10,
   },
   pickerContainer: {
-    borderColor: 'white',
+    borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 12,
+    borderRadius: 5,
+    marginBottom: 10,
   },
   picker: {
+    height: 40,
+    width: '100%',
     color: 'white',
   },
-  createButton: {
-    backgroundColor: 'green',
-    marginTop: 20,
+  dateButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  button: {
+    backgroundColor: 'red', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
+  },
+  buttonText: {
+    color: 'white', // Cambia el color del texto a blanco para contrastar con el fondo rojo
+    fontSize: 16, // Ajusta el tamaño de la fuente según tus necesidades
+  },
+  button2: {
+    backgroundColor: 'green', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
   },
 });
 
