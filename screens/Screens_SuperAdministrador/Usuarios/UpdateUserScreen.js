@@ -42,7 +42,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
 
   const fetchDocuments = async () => {
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/documentos');
+      const response = await fetch('http://192.168.1.3:3000/api/auth/documentos');
       const data = await response.json();
       setDocuments(data);
     } catch (error) {
@@ -53,7 +53,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
 
   const fetchPositions = async () => {
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/positions');
+      const response = await fetch('http://192.168.1.3:3000/api/auth/positions');
       const data = await response.json();
       setPositions(data);
     } catch (error) {
@@ -64,7 +64,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/sucursales');
+      const response = await fetch('http://192.168.1.3:3000/api/auth/sucursales');
       const data = await response.json();
       setBranches(data);
     } catch (error) {
@@ -75,7 +75,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
 
   const fetchDepartments = async () => {
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/departamentos');
+      const response = await fetch('http://192.168.1.3:3000/api/auth/departamentos');
       const data = await response.json();
       setDepartments(data);
     } catch (error) {
@@ -86,7 +86,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
 
   const fetchContracts = async () => {
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/contratos');
+      const response = await fetch('http://192.168.1.3:3000/api/auth/contratos');
       const data = await response.json();
       setContracts(data);
     } catch (error) {
@@ -97,7 +97,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
 
   const fetchJobTitles = async () => {
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/jobstitles');
+      const response = await fetch('http://192.168.1.3:3000/api/auth/jobstitles');
       const data = await response.json();
       setJobTitles(data);
     } catch (error) {
@@ -162,7 +162,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
     }
 
     try {
-      const response = await axios.put(`http://192.168.100.7:3000/api/auth/actualizarusuario/${userId}`, formData, {
+      const response = await axios.put(`http://192.168.1.3:3000/api/auth/actualizarusuario/${userId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

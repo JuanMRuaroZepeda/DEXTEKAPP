@@ -23,7 +23,7 @@ const CreateProyectoScreen = ({ navigation }) => {
   }, []);
 
   const fetchClientes = () => {
-    fetch('http://192.168.100.7:3000/api/auth/clientes')
+    fetch('http://192.168.1.3:3000/api/auth/clientes')
       .then(response => response.json())
       .then(data => {
         setClientes(Array.isArray(data) ? data : []);
@@ -35,7 +35,7 @@ const CreateProyectoScreen = ({ navigation }) => {
   };
 
   const fetchUsuarios = () => {
-    fetch('http://192.168.100.7:3000/api/auth/usersrole3')
+    fetch('http://192.168.1.3:3000/api/auth/usersrole3')
       .then(response => response.json())
       .then(data => {
         setUsuarios(Array.isArray(data) ? data : []);
@@ -62,7 +62,7 @@ const CreateProyectoScreen = ({ navigation }) => {
       id_client: idClient
     };
 
-    fetch('http://192.168.100.7:3000/api/auth/crearproyecto', {
+    fetch('http://192.168.1.3:3000/api/auth/crearproyecto', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const CreateProyectoScreen = ({ navigation }) => {
           <Picker
             selectedValue={idStatus}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdStatus(itemValue)}
+            onValueChange={(itemValue) => setIdStatus(itemValue)}
           >
             <Picker.Item label="Seleccione una Opción" value="" />
             <Picker.Item label="Activo" value="1" />
@@ -146,23 +146,23 @@ const CreateProyectoScreen = ({ navigation }) => {
         </View>
         <Text style={styles.text}>Selecciona un Encargado:</Text>
         <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={idUser}
-            style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdUser(itemValue)}
-          >
-            <Picker.Item label="Seleccionar Usuario" value="" />
-            {usuarios.map(user => (
-              <Picker.Item key={user.id} label={user.name} value={user.id} />
-            ))}
-          </Picker>
+        <Picker
+          selectedValue={idUser}
+          style={styles.picker}
+          onValueChange={(itemValue) => setIdUser(itemValue)}
+        >
+          <Picker.Item label="Seleccionar Usuario" value="" />
+          {usuarios.map(user => (
+            <Picker.Item key={user.id} label={user.name} value={String(user.id)} />
+          ))}
+        </Picker>
         </View>
         <Text style={styles.text}>Selecciona un Cliente:</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={idClient}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setIdClient(itemValue)}
+            onValueChange={(itemValue) => setIdClient(itemValue)}
           >
             <Picker.Item label="Seleccionar Cliente" value="" />
             {clientes.map(cliente => (
@@ -215,20 +215,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: 'red', // Establece el color de fondo rojo
-    padding: 10, // Ajusta el padding según tus necesidades
-    borderRadius: 5, // Opcional: agrega bordes redondeados
-    alignItems: 'center', // Opcional: centra el texto
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
   },
   buttonText: {
-    color: 'white', // Cambia el color del texto a blanco para contrastar con el fondo rojo
-    fontSize: 16, // Ajusta el tamaño de la fuente según tus necesidades
+    color: 'white',
+    fontSize: 16,
   },
   button2: {
-    backgroundColor: 'green', // Establece el color de fondo rojo
-    padding: 10, // Ajusta el padding según tus necesidades
-    borderRadius: 5, // Opcional: agrega bordes redondeados
-    alignItems: 'center', // Opcional: centra el texto
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
   },
 });
 

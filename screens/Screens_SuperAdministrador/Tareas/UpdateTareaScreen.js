@@ -28,7 +28,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
   }, []);
 
   const fetchStatus = () => {
-    fetch('http://192.168.100.7:3000/api/auth/status')
+    fetch('http://192.168.1.3:3000/api/auth/status')
       .then(response => response.json())
       .then(data => setStatus(data))
       .catch(error => {
@@ -38,7 +38,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
   };
 
   const fetchClients = () => {
-    fetch('http://192.168.100.7:3000/api/auth/clientes')
+    fetch('http://192.168.1.3:3000/api/auth/clientes')
       .then(response => response.json())
       .then(data => setClients(data))
       .catch(error => {
@@ -48,7 +48,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
   };
 
   const fetchUsers = () => {
-    fetch('http://192.168.100.7:3000/api/auth/usersrole3')
+    fetch('http://192.168.1.3:3000/api/auth/usersrole3')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => {
@@ -58,7 +58,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
   };
 
   const fetchProjects = () => {
-    fetch('http://192.168.100.7:3000/api/auth/proyectos')
+    fetch('http://192.168.1.3:3000/api/auth/proyectos')
       .then(response => response.json())
       .then(data => setProjects(data))
       .catch(error => {
@@ -84,7 +84,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
       id_project: idProject
     };
 
-    fetch(`http://192.168.100.7:3000/api/auth/actualizartarea/${taskId}`, {
+    fetch(`http://192.168.1.3:3000/api/auth/actualizartarea/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -141,22 +141,17 @@ const UpdateTareaScreen = ({ route, navigation }) => {
           onChangeText={text => setDescription(text)}
         />
         <Text style={styles.text}>Nueva Fecha de Entrega:</Text>
-        <TouchableOpacity
-          style={styles.datePickerButton}
-          onPress={() => setShowDatePicker(true)}
-        >
-          <Text style={styles.buttonText}>Seleccionar Nueva Fecha Límite</Text>
-        </TouchableOpacity>
-        {showDatePicker && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={deadline}
-            mode="date"
-            is24Hour={true}
-            display="default"
-            onChange={onChangeDate}
-          />
-        )}
+        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+        <Text style={styles.buttonText}>{deadline.toDateString()}</Text>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={deadline}
+          mode="date"
+          display="default"
+          onChange={onChangeDate}
+        />
+      )}
         <Text style={styles.text}>Selecciona un Nuevo Estado:</Text>
         <View style={styles.pickerContainer}>
           <Picker
@@ -179,7 +174,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
           >
             <Picker.Item label="Seleccionar una Opción" value="" />
             {users.map(user => (
-              <Picker.Item key={user.id} label={user.name} value={user.id} />
+              <Picker.Item key={user.id} label={user.name} value={String(user.id)} />
             ))}
           </Picker>
         </View>
@@ -192,7 +187,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
           >
             <Picker.Item label="Seleccionar un Opción" value="" />
             {clients.map(client => (
-              <Picker.Item key={client.id} label={client.contac_name} value={client.id} />
+              <Picker.Item key={client.id} label={client.contac_name} value={String(client.id)} />
             ))}
           </Picker>
         </View>
@@ -205,69 +200,70 @@ const UpdateTareaScreen = ({ route, navigation }) => {
           >
             <Picker.Item label="Seleccionar una Opción" value="" />
             {projects.map(project => (
-              <Picker.Item key={project.id} label={project.name_project} value={project.id} />
+              <Picker.Item key={project.id} label={project.name_project} value={String(project.id)} />
             ))}
           </Picker>
         </View>
-        <Button title="Actualizar Tarea" onPress={updateTask} buttonStyle={styles.createButton} />
+        <Button title="Actualizar Tarea" onPress={updateTask} buttonStyle={styles.button2} />
       </ScrollView>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        resizeMode: 'cover',
-      },
-      container: {
-        flexGrow: 1,
-        justifyContent: 'top',
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-      },
-      input: {
-        height: 40,
-        borderColor: 'white',
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
-        color: 'white',
-      },
-      text: {
-        color: 'white',
-        marginBottom: 8,
-      },
-      datePickerButton: {
-        backgroundColor: 'gray',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 20,
-      },
-      buttonText: {
-        color: 'white',
-        fontSize: 18,
-        textAlign: 'center',
-      },
-      pickerContainer: {
-        borderColor: 'white',
-        borderWidth: 1,
-        marginBottom: 12,
-      },
-      picker: {
-        height: 40,
-        color: 'white',
-      },
-      createButton: {
-        backgroundColor: 'green',
-        borderRadius: 5,
-        marginTop: 20,
-      },
-      loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
+  background: {
+    flex: 1,
+  },
+  container: {
+    padding: 20,
+  },
+  text: {
+    color: 'white',
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    color: 'white',
+    marginBottom: 10,
+  },
+  pickerContainer: {
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  picker: {
+    height: 40,
+    width: '100%',
+    color: 'white',
+  },
+  dateButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: 'red', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
+  },
+  buttonText: {
+    color: 'white', // Cambia el color del texto a blanco para contrastar con el fondo rojo
+    fontSize: 16, // Ajusta el tamaño de la fuente según tus necesidades
+  },
+  button2: {
+    backgroundColor: 'green', // Establece el color de fondo rojo
+    padding: 10, // Ajusta el padding según tus necesidades
+    borderRadius: 5, // Opcional: agrega bordes redondeados
+    alignItems: 'center', // Opcional: centra el texto
+  },
 });
 
 export default UpdateTareaScreen;

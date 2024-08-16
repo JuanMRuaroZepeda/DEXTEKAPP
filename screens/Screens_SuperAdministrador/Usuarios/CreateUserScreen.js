@@ -39,7 +39,7 @@ const CreateUserScreen = ({ navigation }) => {
   }, []);
 
   const fetchDocuments = () => {
-    fetch('http://192.168.100.7:3000/api/auth/documentos')
+    fetch('http://192.168.1.3:3000/api/auth/documentos')
       .then(response => response.json())
       .then(data => setDocuments(data))
       .catch(error => {
@@ -49,7 +49,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchPositions = () => {
-    fetch('http://192.168.100.7:3000/api/auth/positions')
+    fetch('http://192.168.1.3:3000/api/auth/positions')
       .then(response => response.json())
       .then(data => setPositions(data))
       .catch(error => {
@@ -59,7 +59,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchBranches = () => {
-    fetch('http://192.168.100.7:3000/api/auth/sucursales')
+    fetch('http://192.168.1.3:3000/api/auth/sucursales')
       .then(response => response.json())
       .then(data => setBranches(data))
       .catch(error => {
@@ -69,7 +69,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchDepartments = () => {
-    fetch('http://192.168.100.7:3000/api/auth/departamentos')
+    fetch('http://192.168.1.3:3000/api/auth/departamentos')
       .then(response => response.json())
       .then(data => setDepartments(data))
       .catch(error => {
@@ -79,7 +79,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchContracts = () => {
-    fetch('http://192.168.100.7:3000/api/auth/contratos')
+    fetch('http://192.168.1.3:3000/api/auth/contratos')
       .then(response => response.json())
       .then(data => setContracts(data))
       .catch(error => {
@@ -89,7 +89,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchJobTitles = () => {
-    fetch('http://192.168.100.7:3000/api/auth/jobstitles')
+    fetch('http://192.168.1.3:3000/api/auth/jobstitles')
       .then(response => response.json())
       .then(data => setJobTitles(data))
       .catch(error => {
@@ -162,7 +162,7 @@ const CreateUserScreen = ({ navigation }) => {
     }
   
     try {
-      const response = await axios.post('http://192.168.100.7:3000/api/auth/register2', formData, {
+      const response = await axios.post('http://192.168.1.3:3000/api/auth/register2', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

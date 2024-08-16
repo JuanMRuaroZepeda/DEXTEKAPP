@@ -19,11 +19,11 @@ const ConsultarTareas = ({ navigation }) => {
   const fetchData = () => {
     setLoading(true);
     Promise.all([
-      fetch('http://192.168.100.7:3000/api/auth/proyectos').then(response => response.json()),
-      fetch('http://192.168.100.7:3000/api/auth/status').then(response => response.json()),
-      fetch('http://192.168.100.7:3000/api/auth/usuarios').then(response => response.json()),
-      fetch('http://192.168.100.7:3000/api/auth/clientes').then(response => response.json()),
-      fetch('http://192.168.100.7:3000/api/auth/tareas').then(response => response.json()),
+      fetch('http://192.168.1.3:3000/api/auth/proyectos').then(response => response.json()),
+      fetch('http://192.168.1.3:3000/api/auth/status').then(response => response.json()),
+      fetch('http://192.168.1.3:3000/api/auth/usuarios').then(response => response.json()),
+      fetch('http://192.168.1.3:3000/api/auth/clientes').then(response => response.json()),
+      fetch('http://192.168.1.3:3000/api/auth/tareas').then(response => response.json()),
     ])
       .then(([proyectosData, statusData, usuariosData, clientesData, tareasData]) => {
         setProjects(proyectosData);
@@ -54,7 +54,7 @@ const ConsultarTareas = ({ navigation }) => {
   }, [searchQuery, tasks]);
 
   const deleteTask = (taskId) => {
-    fetch(`http://192.168.100.7:3000/api/auth/eliminartarea/${taskId}`, {
+    fetch(`http://192.168.1.3:3000/api/auth/eliminartarea/${taskId}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

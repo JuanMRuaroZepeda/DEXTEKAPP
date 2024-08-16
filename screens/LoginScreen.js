@@ -17,7 +17,7 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
     try {
-      const response = await fetch('http://192.168.100.7:3000/api/auth/login2', {
+      const response = await fetch('http://192.168.1.3:3000/api/auth/login2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,39 +25,46 @@ const LoginScreen = ({ navigation }) => {
         body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
-
+  
       console.log("Response data: ", data);
-
+  
       if (data.accessToken) {
         await AsyncStorage.setItem('token', data.accessToken);
-
+  
         const idRole = data.id_role !== undefined ? data.id_role.toString() : null;
         const idStatus = data.id_status !== undefined ? data.id_status.toString() : null;
-
+        const id = data.id !== undefined ? data.id.toString() : null;
+  
+        if (id !== null) {
+          await AsyncStorage.setItem('id', id);
+        } else {
+          await AsyncStorage.removeItem('id');
+        }
+  
         if (idRole !== null) {
           await AsyncStorage.setItem('role', idRole);
         } else {
           await AsyncStorage.removeItem('role');
         }
-
+  
         if (data.name !== undefined) {
           await AsyncStorage.setItem('name', data.name);
         } else {
           await AsyncStorage.removeItem('name');
         }
-
+  
         if (data.lastname !== undefined) {
           await AsyncStorage.setItem('lastname', data.lastname);
         } else {
           await AsyncStorage.removeItem('lastname');
         }
-
+  
         if (idStatus !== null) {
           await AsyncStorage.setItem('status', idStatus);
         } else {
           await AsyncStorage.removeItem('status');
         }
-
+  
         if (idStatus === '2') {
           Alert.alert('Atención!','Cuenta Eliminada');
           return;
@@ -68,19 +75,19 @@ const LoginScreen = ({ navigation }) => {
           Alert.alert('Atención!','Estado de cuenta no válido');
           return;
         }
-
+  
         switch (idRole) {
           case '1':
-            navigation.navigate('SuperAdmin', { name: data.name, lastname: data.lastname });
+            navigation.navigate('SuperAdmin', { id, name: data.name, lastname: data.lastname });
             break;
           case '2':
-            navigation.navigate('AreaManager', { name: data.name, lastname: data.lastname });
+            navigation.navigate('AreaManager', { id, name: data.name, lastname: data.lastname });
             break;
           case '3':
-            navigation.navigate('Worker', { name: data.name, lastname: data.lastname });
+            navigation.navigate('Worker', { id, name: data.name, lastname: data.lastname });
             break;
           case '4':
-            navigation.navigate('Client', { name: data.name, lastname: data.lastname });
+            navigation.navigate('Client', { id, name: data.name, lastname: data.lastname });
             break;
           default:
             Alert.alert('Atención!','Rol no reconocido');
@@ -93,7 +100,7 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert('Error en el Servidor','Error en la conexión con la API');
     }
   };
-
+    
   return (
     <ImageBackground source={require('../assets/fondos/fondo.jpg')} style={styles.background}>
       <View style={styles.container}>

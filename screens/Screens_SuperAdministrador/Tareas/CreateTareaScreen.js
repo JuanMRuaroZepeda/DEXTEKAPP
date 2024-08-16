@@ -27,42 +27,46 @@ const CreateTareaScreen = ({ navigation }) => {
   }, []);
 
   const fetchStatus = () => {
-    fetch('http://192.168.100.7:3000/api/auth/status')
+    fetch('http://192.168.1.3:3000/api/auth/status')
       .then(response => response.json())
       .then(data => setStatus(data))
       .catch(error => {
         console.error('Error fetching status:', error);
         Alert.alert('Error', 'No se pudo obtener el estado del proyecto.');
+        navigation.goBack()
       });
   };
 
   const fetchClients = () => {
-    fetch('http://192.168.100.7:3000/api/auth/clientes')
+    fetch('http://192.168.1.3:3000/api/auth/clientes')
       .then(response => response.json())
       .then(data => setClients(data))
       .catch(error => {
         console.error('Error fetching clientes:', error);
         Alert.alert('Error', 'No se pudo obtener la lista de clientes.');
+        navigation.goBack()
       });
   };
 
   const fetchUsers = () => {
-    fetch('http://192.168.100.7:3000/api/auth/usersrole3')
+    fetch('http://192.168.1.3:3000/api/auth/usersrole3')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => {
         console.error('Error fetching usuarios:', error);
         Alert.alert('Error', 'No se pudo obtener la lista de usuarios.');
+        navigation.goBack()
       });
   };
 
   const fetchProjects = () => {
-    fetch('http://192.168.100.7:3000/api/auth/proyectos')
+    fetch('http://192.168.1.3:3000/api/auth/proyectos')
       .then(response => response.json())
       .then(data => setProjects(data))
       .catch(error => {
         console.error('Error fetching proyectos:', error);
         Alert.alert('Error', 'No se pudo obtener la lista de proyectos.');
+        navigation.goBack()
       });
   };
 
@@ -83,7 +87,7 @@ const CreateTareaScreen = ({ navigation }) => {
       id_project: idProject
     };
 
-    fetch('http://192.168.100.7:3000/api/auth/tasktnuevo', {
+    fetch('http://192.168.1.3:3000/api/auth/tasktnuevo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -173,7 +177,7 @@ const CreateTareaScreen = ({ navigation }) => {
           >
             <Picker.Item label="Seleccionar Usuario" value="" />
             {users.map(user => (
-              <Picker.Item key={user.id} label={user.name} value={user.id} />
+              <Picker.Item key={user.id} label={user.name} value={String(user.id)} />
             ))}
           </Picker>
         </View>
@@ -199,7 +203,7 @@ const CreateTareaScreen = ({ navigation }) => {
           >
             <Picker.Item label="Seleccionar Proyecto" value="" />
             {projects.map(project => (
-              <Picker.Item key={project.id} label={project.name_project} value={project.id} />
+              <Picker.Item key={project.id} label={project.name_project} value={String(project.id)} />
             ))}
           </Picker>
         </View>

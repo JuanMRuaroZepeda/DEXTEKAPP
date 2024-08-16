@@ -3,8 +3,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Login2Screen from '../screens/DEXTEK2/Login2Screen';
-
 import LoginScreen from '../screens/LoginScreen';
 import SuperAdminScreen from '../screens/SuperAdminScreen';
 import AreaManagerScreen from '../screens/AreaManagerScreen';
@@ -35,6 +33,10 @@ import CreateClienteScreen from '../screens/Screens_SuperAdministrador/Clientes/
 import UpdateClienteScreen from '../screens/Screens_SuperAdministrador/Clientes/UpdateClienteScreen';
 import ConsultarClientesScreen from '../screens/Screens_SuperAdministrador/Clientes/ConsultarClientesScreen';
 
+//Trabajador
+import ConsultarProyectosTrabajador from '../screens/Screens_Worker/Consultar_Proyectos_Screen';
+import ConsultarProyectos2 from '../screens/Screens_Worker/Consultar_Proyectos2';
+import TareasProyecto from '../screens/Screens_Worker/TareasProyectoScreen';
 
 const Stack = createStackNavigator();
 
@@ -169,6 +171,25 @@ const AppNavigator = () => {
           component={WorkerScreen}
           options={{ title: 'Trabajador', headerLeft: () => null }}
         />
+
+        <Stack.Screen
+        name="ConsultarProyectosTrabajador"
+        component={ConsultarProyectosTrabajador}
+        options={{title: 'Mis Proyectos'}}
+        />
+
+        <Stack.Screen
+        name="ConsultarProyectos2"
+        component={ConsultarProyectos2}
+        options={{title: 'Selecciona un Proyecto'}}
+        />
+
+        <Stack.Screen
+        name="TareasProyecto"
+        component={TareasProyecto}
+        options={{title: 'Tareas del Proyecto'}}
+        />
+
         <Stack.Screen
           name="Client"
           component={ClientScreen}

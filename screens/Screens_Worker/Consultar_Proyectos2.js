@@ -1,46 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, Alert, TextInput, RefreshControl } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, ActivityIndicator, TextInput, RefreshControl } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ConsultarProyectos = ({ navigation }) => {
+const ConsultarProyectos2 = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
-  const [status, setStatus] = useState([]);
-  const [clientes, setClientes] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProjects, setFilteredProjects] = useState([]);
-  const [refreshing, setRefreshing] = useState(false); // Estado para manejar la acción de refrescar
+  const [refreshing, setRefreshing] = useState(false);
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
-    fetchData();
+    const fetchUserId = async () => {
+      const id = await AsyncStorage.getItem('id');
+      setUserId(id);
+    };
+    fetchUserId();
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      fetchData();
+    }
+  }, [userId]);
 
   const fetchData = () => {
     setLoading(true);
-    Promise.all([
-      fetch('http://192.168.1.3:3000/api/auth/proyectos').then(response => response.json()),
-      fetch('http://192.168.1.3:3000/api/auth/status').then(response => response.json()),
-      fetch('http://192.168.1.3:3000/api/auth/clientes').then(response => response.json()),
-      fetch('http://192.168.1.3:3000/api/auth/usuarios').then(response => response.json())
-    ])
-    .then(([proyectosData, statusData, clientesData, usuariosData]) => {
-      setProjects(proyectosData);
-      setStatus(statusData);
-      setClientes(clientesData);
-      setUsuarios(usuariosData);
-      setLoading(false); // Marca la carga como completada
-      setRefreshing(false); // Marca la carga como completada
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-      setLoading(false); // En caso de error, marca la carga como completada
-      setRefreshing(false); // En caso de error, marca la carga como completada
-    });
+    fetch(`http://192.168.1.3:3000/api/auth/misproyectos/${userId}`)
+      .then(response => response.json())
+      .then(data => {
+        setProjects(data);
+        setLoading(false);
+        setRefreshing(false);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+        setRefreshing(false);
+      });
   };
 
   useEffect(() => {
-    // Filtrar proyectos basado en la búsqueda
     const filtered = projects.filter(project =>
       (project.name_project || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (project.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -65,7 +65,7 @@ const ConsultarProyectos = ({ navigation }) => {
   }
 
   return (
-    <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
+    <ImageBackground source={require('../../assets/fondos/fondo.jpg')} style={styles.background}>
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -74,7 +74,7 @@ const ConsultarProyectos = ({ navigation }) => {
           />
         }
       >
-        <Text style={styles.text}>Proyectos</Text>
+        <Text style={styles.text}>Mis Proyectos Asignados</Text>
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar por nombre, descripción, usuario, cliente o estado"
@@ -91,6 +91,14 @@ const ConsultarProyectos = ({ navigation }) => {
               <Text style={styles.userText}>Estado: {project.name_status}</Text>
               <Text style={styles.userText}>Usuario: {project.user_name}</Text>
               <Text style={styles.userText}>Cliente: {project.client_name}</Text>
+              
+              {/* Botón para navegar a la pantalla de tareas relacionadas */}
+              <TouchableOpacity 
+                style={styles.button} 
+                onPress={() => navigation.navigate('TareasProyecto', { projectId: project.id })}
+              >
+                <Text style={styles.buttonText}>Ver Tareas</Text>
+              </TouchableOpacity>
             </View>
           ))}
         </View>
@@ -135,52 +143,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
   button: {
-    backgroundColor: '#4CAF50',
-    padding: 10,
+    backgroundColor: 'red',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
-    flex: 1,
-    alignItems: 'center',
-    marginRight: 5,
-  },
-  buttonDelete: {
-    backgroundColor: '#F44336',
-    padding: 10,
-    borderRadius: 5,
-    flex: 1,
-    alignItems: 'center',
-    marginLeft: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonUpdate: {
-    backgroundColor: '#F9C806',
-    padding: 10,
-    borderRadius: 5,
-    flex: 1,
-    alignItems: 'center',
-    marginRight: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  fab: {
-    position: 'absolute',
-    right: 150,
-    bottom: 20,
-    width: 60,
-    height: 60,
-    backgroundColor: 'green',
-    borderRadius: 30,
-    justifyContent: 'center',
+    marginTop: 10,
     alignItems: 'center',
   },
   buttonText: {
     color: 'white',
+    fontWeight: 'bold',
     fontSize: 16,
   },
   loadingContainer: {
@@ -189,4 +162,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-export default ConsultarProyectos;
+
+export default ConsultarProyectos2;
