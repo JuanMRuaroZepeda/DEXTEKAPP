@@ -26,7 +26,7 @@ const ConsultarProyectosTrabajador = ({ navigation }) => {
 
   const fetchData = () => {
     setLoading(true);
-    fetch(`http://192.168.1.3:3000/api/auth/misproyectos/${userId}`)
+    fetch(`http://192.168.1.78:3000/api/auth/misproyectos/${userId}`)
       .then(response => response.json())
       .then(data => {
         setProjects(data);
@@ -75,7 +75,7 @@ const ConsultarProyectosTrabajador = ({ navigation }) => {
           />
         }
       >
-        <Text style={styles.text}>Mis Proyectos Asignados</Text>
+        <Text style={styles.text}>Mis Proyectos A Cargo</Text>
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar por nombre, descripción, usuario, cliente o estado"

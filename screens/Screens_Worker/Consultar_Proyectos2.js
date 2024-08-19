@@ -26,7 +26,7 @@ const ConsultarProyectos2 = ({ navigation }) => {
 
   const fetchData = () => {
     setLoading(true);
-    fetch(`http://192.168.1.3:3000/api/auth/misproyectos/${userId}`)
+    fetch(`http://192.168.1.78:3000/api/auth/misproyectos/${userId}`)
       .then(response => response.json())
       .then(data => {
         setProjects(data);
@@ -74,7 +74,7 @@ const ConsultarProyectos2 = ({ navigation }) => {
           />
         }
       >
-        <Text style={styles.text}>Mis Proyectos Asignados</Text>
+        <Text style={styles.text}>Mis Proyectos a Cargo</Text>
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar por nombre, descripción, usuario, cliente o estado"
@@ -95,7 +95,7 @@ const ConsultarProyectos2 = ({ navigation }) => {
               {/* Botón para navegar a la pantalla de tareas relacionadas */}
               <TouchableOpacity 
                 style={styles.button} 
-                onPress={() => navigation.navigate('TareasProyecto', { projectId: project.id })}
+                onPress={() => navigation.navigate('TareasProyecto', { projectId: project.id, projectName: project.name_project })}
               >
                 <Text style={styles.buttonText}>Ver Tareas</Text>
               </TouchableOpacity>

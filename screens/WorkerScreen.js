@@ -50,7 +50,7 @@ const WorkerScreen = ({ navigation }) => {
       {subItems.map((subItem) => (
         <TouchableOpacity
           key={subItem.title}
-          onPress={() => navigation.navigate(subItem.screen)}
+          onPress={() => navigation.navigate(subItem.screen, subItem.params)}
           style={styles.subMenuItem}
         >
           <Text style={styles.subMenuText}>{subItem.title}</Text>
@@ -77,7 +77,7 @@ const WorkerScreen = ({ navigation }) => {
               { title: 'Consultar Proyectos', screen: 'ConsultarProyectosTrabajador' },
             ])}
             {renderMenuItem('Tareas', [
-              { title: 'Consultar Tareas', screen: 'ConsultarProyectos2' },
+              { title: 'Consultar Tareas', screen: 'MisTareas', params: { userId: id } },
             ])}
             <TouchableOpacity
               style={styles.logoutButton}
@@ -101,10 +101,20 @@ const WorkerScreen = ({ navigation }) => {
               <Icon name="briefcase" size={50} color="white" />
               <Text style={styles.buttonText}>Consultar Proyectos</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('ConsultarProyectos2')}>
+            <TouchableOpacity 
+              style={styles.bigButton} 
+              onPress={() => navigation.navigate('MisTareas', { userId: id })}
+            >
               <Icon name="tasks" size={50} color="white" />
               <Text style={styles.buttonText}>Consultar Tareas</Text>
             </TouchableOpacity>
+            {/* <TouchableOpacity 
+              style={styles.bigButton} 
+              onPress={() => navigation.navigate('')}
+            >
+              <Icon name="file" size={50} color="white" />
+              <Text style={styles.buttonText}>Mostrar Evidencias</Text>
+            </TouchableOpacity> */}
           </View>
         </ScrollView>
       </View>

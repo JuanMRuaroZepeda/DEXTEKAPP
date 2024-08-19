@@ -25,7 +25,7 @@ const UpdateProject = ({ route, navigation }) => {
   }, []);
 
   const fetchClientes = () => {
-    fetch('http://192.168.1.3:3000/api/auth/clientes')
+    fetch('http://192.168.1.78:3000/api/auth/clientes')
       .then(response => response.json())
       .then(data => {
         setClientes(data);
@@ -37,7 +37,7 @@ const UpdateProject = ({ route, navigation }) => {
   };
 
   const fetchUsuarios = () => {
-    fetch('http://192.168.1.3:3000/api/auth/usersrole3')
+    fetch('http://192.168.1.78:3000/api/auth/usersrole3')
       .then(response => response.json())
       .then(data => {
         setUsuarios(data);
@@ -64,7 +64,7 @@ const UpdateProject = ({ route, navigation }) => {
       id_client: idClient
     };
 
-    fetch(`http://192.168.1.3:3000/api/auth/actualizarproyecto/${projectId}`, {
+    fetch(`http://192.168.1.78:3000/api/auth/actualizarproyecto/${projectId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

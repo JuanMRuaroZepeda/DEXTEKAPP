@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator, ImageBackground,
 import * as DocumentPicker from 'expo-document-picker';
 import axios from 'axios';
 
-const TareasProyecto = ({ route }) => {
-  const { projectId } = route.params;
+const TareasProyecto = ({ route, navigation }) => {
+  const { projectId, projectName } = route.params;
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  const [document, setDocument] = useState(null);
 
   useEffect(() => {
     fetchTasks();
@@ -16,7 +18,7 @@ const TareasProyecto = ({ route }) => {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://192.168.1.3:3000/api/auth/tareasporproyectos/${projectId}`);
+      const response = await fetch(`http://192.168.1.78:3000/api/auth/tareasporproyectos/${projectId}`);
       const data = await response.json();
       setTasks(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -27,50 +29,72 @@ const TareasProyecto = ({ route }) => {
     }
   };
 
+  const handleDocumentPick = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({});
+      
+      if (result.canceled) return;
+  
+      if (result.assets && result.assets.length > 0) {
+        const selectedDocument = result.assets[0];
+        setDocument(selectedDocument);
+      }
+    } catch (error) {
+      console.error('Error picking document:', error);
+      Alert.alert('Error', 'No se pudo seleccionar el documento.');
+    }
+  };
+
   const onRefresh = () => {
     setRefreshing(true);
     fetchTasks().finally(() => setRefreshing(false));
   };
 
-  const handleDocumentPick = async (taskId) => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync({});
-      if (result.type === 'success') {
-        const formData = new FormData();
-        formData.append('task_document', {
-          uri: result.uri,
-          name: result.name,
-          type: result.mimeType || 'application/octet-stream',
-        });
-
-        const response = await axios.post(`http://192.168.1.3:3000/api/auth/evidenciatarea`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        if (response.status === 200) {
-          Alert.alert('Éxito', 'Evidencia subida correctamente');
-          //updateTaskStatus(taskId);
-        } else {
-          Alert.alert('Error', 'No se pudo subir la evidencia');
-        }
-      }
-    } catch (error) {
-      console.error('Error seleccionando el archivo:', error);
-      Alert.alert('Error', 'No se pudo seleccionar el archivo');
+  const createEvidence = async (taskId) => {
+    if (!taskId) {
+      Alert.alert('Error del Servidor', 'Error del Servidor.', [{ text: 'OK' }]);
+      return;
     }
-  };
+
+    const formData = new FormData();
+    formData.append('id_task', taskId);
+
+    if (document) {
+      const fileUri = document.uri;
+      const fileName = document.name;
+      const fileType = document.mimeType;
+
+      formData.append('task_document', {
+        uri: fileUri,
+        type: fileType,
+        name: fileName,
+      });
+    }
+
+    try {
+      const response = await axios.post(`http://192.168.1.78:3000/api/auth/evidenciatarea`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status !== 200) {
+        throw new Error(response.data.message || 'Ocurrió un error al subir la evidencia');
+      }
+      Alert.alert('Evidencia Subida Correctamente', response.data.message, [{ text: 'OK' }]);
+      updateTaskStatus(taskId);
+    } catch (error) {
+      console.error(error.response ? error.response.data : error.message);
+      Alert.alert('Error', error.response ? error.response.data.message : 'No se pudo conectar con la API');
+    }
+  }
 
   const updateTaskStatus = async (taskId) => {
     try {
-      const response = await axios.patch(`http://192.168.1.3:3000/api/auth/updateTaskStatus/${taskId}`, {
-        // Aquí podrías enviar datos adicionales si es necesario
-      });
+      const response = await axios.patch(`http://192.168.1.78:3000/api/auth/updateTaskStatus/${taskId}`);
 
       if (response.status === 200) {
-        Alert.alert('Éxito', 'Estado de tarea actualizado correctamente');
-        fetchTasks(); // Actualizar la lista de tareas después de subir la evidencia
+        fetchTasks();
       } else {
         Alert.alert('Error', 'No se pudo actualizar el estado de la tarea');
       }
@@ -98,24 +122,37 @@ const TareasProyecto = ({ route }) => {
           />
         }
       >
-        <Text style={styles.text}>Tareas del Proyecto</Text>
+        <Text style={styles.text}>Tareas del Proyecto {projectName}</Text>
         <View style={styles.container}>
           {tasks.map(task => (
             <View key={task.id} style={styles.taskCard}>
-              <Text style={styles.taskText}>id: {task.id}</Text>
               <Text style={styles.taskText}>Nombre: {task.name_task}</Text>
               <Text style={styles.taskText}>Descripción: {task.description}</Text>
               <Text style={styles.taskText}>Fecha límite: {task.deadline}</Text>
               <Text style={styles.taskText}>Estado: {task.name_status}</Text>
               <Text style={styles.taskText}>Usuario: {task.user_name}</Text>
-              
-              <TouchableOpacity style={styles.uploadButton} onPress={() => handleDocumentPick(task.id)}>
-                <Text style={styles.uploadButtonText}>Subir Evidencia</Text>
-              </TouchableOpacity>
 
-              <TouchableOpacity style={styles.updateButton} onPress={() => updateTaskStatus(task.id)}>
-                <Text style={styles.updateButtonText}>Actualizar Estado</Text>
-              </TouchableOpacity>
+              {task.name_status === 'Finalizado' ? (
+                <Text style={styles.evidenceText}>Evidencia ya enviada</Text>
+              ) : (
+                <>
+                  <TouchableOpacity
+                    onPress={handleDocumentPick}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>
+                      {document ? document.name : 'Selecciona un Documento'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.updateButton}
+                    onPress={() => createEvidence(task.id)}
+                  >
+                    <Text style={styles.updateButtonText}>Enviar Evidencia</Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           ))}
         </View>
@@ -152,6 +189,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
   },
+  evidenceText: {
+    color: 'red',
+    fontSize: 26,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 15,
+  },
   uploadButton: {
     backgroundColor: '#2196F3',
     padding: 10,
@@ -180,6 +224,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  button: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 

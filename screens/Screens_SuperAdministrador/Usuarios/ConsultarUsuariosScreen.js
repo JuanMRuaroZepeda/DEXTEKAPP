@@ -42,7 +42,7 @@ const ConsultarUsuarios = ({ navigation }) => {
   }, [searchQuery, users, positions, branches, departments, contracts, jobTitles]);
 
   const fetchUsers = () => {
-    fetch('http://192.168.1.3:3000/api/auth/usuarios2')
+    fetch('http://192.168.1.78:3000/api/auth/usuarios2')
       .then(response => response.json())
       .then(data => {
         setUsers(data);
@@ -61,7 +61,7 @@ const ConsultarUsuarios = ({ navigation }) => {
   };
 
   const fetchPositions = () => {
-    fetch('http://192.168.1.3:3000/api/auth/positions')
+    fetch('http://192.168.1.78:3000/api/auth/positions')
       .then(response => response.json())
       .then(data => setPositions(data))
       .catch(error => {
@@ -71,7 +71,7 @@ const ConsultarUsuarios = ({ navigation }) => {
   };
 
   const fetchBranches = () => {
-    fetch('http://192.168.1.3:3000/api/auth/sucursales')
+    fetch('http://192.168.1.78:3000/api/auth/sucursales')
       .then(response => response.json())
       .then(data => setBranches(data))
       .catch(error => {
@@ -81,7 +81,7 @@ const ConsultarUsuarios = ({ navigation }) => {
   };
 
   const fetchDepartments = () => {
-    fetch('http://192.168.1.3:3000/api/auth/departamentos')
+    fetch('http://192.168.1.78:3000/api/auth/departamentos')
       .then(response => response.json())
       .then(data => setDepartments(data))
       .catch(error => {
@@ -91,7 +91,7 @@ const ConsultarUsuarios = ({ navigation }) => {
   };
 
   const fetchContracts = () => {
-    fetch('http://192.168.1.3:3000/api/auth/contratos')
+    fetch('http://192.168.1.78:3000/api/auth/contratos')
       .then(response => response.json())
       .then(data => setContracts(data))
       .catch(error => {
@@ -101,7 +101,7 @@ const ConsultarUsuarios = ({ navigation }) => {
   };
 
   const fetchJobTitles = () => {
-    fetch('http://192.168.1.3:3000/api/auth/jobstitles')
+    fetch('http://192.168.1.78:3000/api/auth/jobstitles')
       .then(response => response.json())
       .then(data => setJobTitles(data))
       .catch(error => {
@@ -155,7 +155,7 @@ const ConsultarUsuarios = ({ navigation }) => {
   };
   
   const deleteUser = (userId) => {
-    fetch(`http://192.168.1.3:3000/api/auth/eliminarusuario/${userId}`, {
+    fetch(`http://192.168.1.78:3000/api/auth/eliminarusuario/${userId}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

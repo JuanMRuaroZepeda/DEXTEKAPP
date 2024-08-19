@@ -37,6 +37,7 @@ import ConsultarClientesScreen from '../screens/Screens_SuperAdministrador/Clien
 import ConsultarProyectosTrabajador from '../screens/Screens_Worker/Consultar_Proyectos_Screen';
 import ConsultarProyectos2 from '../screens/Screens_Worker/Consultar_Proyectos2';
 import TareasProyecto from '../screens/Screens_Worker/TareasProyectoScreen';
+import MisTareas from '../screens/Screens_Worker/Mis_TareasScreen';
 
 const Stack = createStackNavigator();
 
@@ -188,6 +189,12 @@ const AppNavigator = () => {
         name="TareasProyecto"
         component={TareasProyecto}
         options={{title: 'Tareas del Proyecto'}}
+        />
+
+        <Stack.Screen
+        name="MisTareas"
+        component={MisTareas}
+        options={{title: 'Mis Tareas'}}
         />
 
         <Stack.Screen

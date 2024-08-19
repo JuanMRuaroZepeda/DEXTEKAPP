@@ -10,7 +10,7 @@ const CMEClientes = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetch('http://192.168.1.3:3000/api/auth/clientes')
+    fetch('http://192.168.1.78:3000/api/auth/clientes')
       .then(response => response.json())
       .then(clientesData => {
         setClientes(clientesData);
@@ -37,7 +37,7 @@ const CMEClientes = ({ navigation }) => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    fetch('http://192.168.1.3:3000/api/auth/clientes')
+    fetch('http://192.168.1.78:3000/api/auth/clientes')
       .then(response => response.json())
       .then(clientesData => {
         setClientes(clientesData);
@@ -50,7 +50,7 @@ const CMEClientes = ({ navigation }) => {
   };
 
   const deleteCliente = (clienteId) => {
-    fetch(`http://192.168.1.3:3000/api/auth/eliminarcliente/${clienteId}`, {
+    fetch(`http://192.168.1.78:3000/api/auth/eliminarcliente/${clienteId}`, {
       method: 'DELETE',
     })
       .then(response => response.json())
