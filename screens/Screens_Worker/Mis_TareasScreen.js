@@ -21,7 +21,7 @@ const MisTareas = ({ route, navigation }) => {
       setLoading(true);
       try {
         // Modifica la URL para incluir el userId
-        const response = await fetch(`http://192.168.1.78:3000/api/auth/mistareaspersonales/${userId}`);
+        const response = await fetch(`http://apidextek.fragomx.com/api/auth/mistareaspersonales/${userId}`);
         const data = await response.json();
         setTasks(Array.isArray(data) ? data : []);
         setFilteredTasks(Array.isArray(data) ? data : []);
@@ -87,7 +87,7 @@ const MisTareas = ({ route, navigation }) => {
       }
 
       try {
-        const response = await axios.post(`http://192.168.1.78:3000/api/auth/evidenciatarea`, formData, {
+        const response = await axios.post(`http://apidextek.fragomx.com/api/auth/evidenciatarea`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -106,7 +106,7 @@ const MisTareas = ({ route, navigation }) => {
 
     const updateTaskStatus = async (taskId) => {
       try {
-        const response = await axios.patch(`http://192.168.1.78:3000/api/auth/updateTaskStatus/${taskId}`);
+        const response = await axios.patch(`http://apidextek.fragomx.com/api/auth/updateTaskStatus/${taskId}`);
 
         if (response.status === 200) {
           fetchTasks();

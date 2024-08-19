@@ -39,7 +39,7 @@ const CreateUserScreen = ({ navigation }) => {
   }, []);
 
   const fetchDocuments = () => {
-    fetch('http://192.168.1.78:3000/api/auth/documentos')
+    fetch('http://apidextek.fragomx.com/api/auth/documentos')
       .then(response => response.json())
       .then(data => setDocuments(data))
       .catch(error => {
@@ -49,7 +49,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchPositions = () => {
-    fetch('http://192.168.1.78:3000/api/auth/positions')
+    fetch('http://apidextek.fragomx.com/api/auth/positions')
       .then(response => response.json())
       .then(data => setPositions(data))
       .catch(error => {
@@ -59,7 +59,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchBranches = () => {
-    fetch('http://192.168.1.78:3000/api/auth/sucursales')
+    fetch('http://apidextek.fragomx.com/api/auth/sucursales')
       .then(response => response.json())
       .then(data => setBranches(data))
       .catch(error => {
@@ -69,7 +69,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchDepartments = () => {
-    fetch('http://192.168.1.78:3000/api/auth/departamentos')
+    fetch('http://apidextek.fragomx.com/api/auth/departamentos')
       .then(response => response.json())
       .then(data => setDepartments(data))
       .catch(error => {
@@ -79,7 +79,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchContracts = () => {
-    fetch('http://192.168.1.78:3000/api/auth/contratos')
+    fetch('http://apidextek.fragomx.com/api/auth/contratos')
       .then(response => response.json())
       .then(data => setContracts(data))
       .catch(error => {
@@ -89,7 +89,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchJobTitles = () => {
-    fetch('http://192.168.1.78:3000/api/auth/jobstitles')
+    fetch('http://apidextek.fragomx.com/api/auth/jobstitles')
       .then(response => response.json())
       .then(data => setJobTitles(data))
       .catch(error => {
@@ -133,6 +133,8 @@ const CreateUserScreen = ({ navigation }) => {
       Alert.alert('Campos incompletos', 'Por favor completa todos los campos.', [{ text: 'OK' }]);
       return;
     }
+
+    const formattedDateStart = dateStart.toISOString().split('T')[0]; // Convierte la fecha a 'YYYY-MM-DD'
   
     const formData = new FormData();
     formData.append('name', name);
@@ -143,7 +145,7 @@ const CreateUserScreen = ({ navigation }) => {
     formData.append('id_positionCompany', idPosition);
     formData.append('id_branch', idBranch);
     formData.append('id_department', idDepartment);
-    formData.append('date_start', dateStart.toISOString());
+    formData.append('date_start', formattedDateStart); // Usa la fecha formateada
     formData.append('id_contract', idContract);
     formData.append('id_jobTitle', idJobTitle);
     formData.append('id_role', idRole);
@@ -162,7 +164,7 @@ const CreateUserScreen = ({ navigation }) => {
     }
   
     try {
-      const response = await axios.post('http://192.168.1.78:3000/api/auth/register2', formData, {
+      const response = await axios.post('http://apidextek.fragomx.com/api/auth/register2', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

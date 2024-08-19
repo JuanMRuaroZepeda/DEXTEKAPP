@@ -14,10 +14,10 @@ const CMEProyectos = ({ navigation }) => {
 
   useEffect(() => {
     Promise.all([
-      fetch('http://192.168.1.78:3000/api/auth/proyectos').then(response => response.json()),
-      fetch('http://192.168.1.78:3000/api/auth/status').then(response => response.json()),
-      fetch('http://192.168.1.78:3000/api/auth/clientes').then(response => response.json()),
-      fetch('http://192.168.1.78:3000/api/auth/usuarios').then(response => response.json())
+      fetch('http://apidextek.fragomx.com/api/auth/proyectos').then(response => response.json()),
+      fetch('http://apidextek.fragomx.com/api/auth/status').then(response => response.json()),
+      fetch('http://apidextek.fragomx.com/api/auth/clientes').then(response => response.json()),
+      fetch('http://apidextek.fragomx.com/api/auth/usuarios').then(response => response.json())
     ])
       .then(([proyectosData, statusData, clientesData, usuariosData]) => {
         setProjects(proyectosData);
@@ -47,10 +47,10 @@ const CMEProyectos = ({ navigation }) => {
   const onRefresh = () => {
     setRefreshing(true);
     Promise.all([
-      fetch('http://192.168.1.78:3000/api/auth/proyectos').then(response => response.json()),
-      fetch('http://192.168.1.78:3000/api/auth/status').then(response => response.json()),
-      fetch('http://192.168.1.78:3000/api/auth/clientes').then(response => response.json()),
-      fetch('http://192.168.1.78:3000/api/auth/usuarios').then(response => response.json())
+      fetch('http://apidextek.fragomx.com/api/auth/proyectos').then(response => response.json()),
+      fetch('http://apidextek.fragomx.com/api/auth/status').then(response => response.json()),
+      fetch('http://apidextek.fragomx.com/api/auth/clientes').then(response => response.json()),
+      fetch('http://apidextek.fragomx.com/api/auth/usuarios').then(response => response.json())
     ])
       .then(([proyectosData, statusData, clientesData, usuariosData]) => {
         setProjects(proyectosData);
@@ -66,7 +66,7 @@ const CMEProyectos = ({ navigation }) => {
   };
 
   const deleteProject = (projectId) => {
-    fetch(`http://192.168.1.78:3000/api/auth/eliminarproyecto/${projectId}`, {
+    fetch(`http://apidextek.fragomx.com/api/auth/eliminarproyecto/${projectId}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

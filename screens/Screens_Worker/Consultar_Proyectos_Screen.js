@@ -26,7 +26,7 @@ const ConsultarProyectosTrabajador = ({ navigation }) => {
 
   const fetchData = () => {
     setLoading(true);
-    fetch(`http://192.168.1.78:3000/api/auth/misproyectos/${userId}`)
+    fetch(`http://apidextek.fragomx.com/api/auth/misproyectos/${userId}`)
       .then(response => response.json())
       .then(data => {
         setProjects(data);

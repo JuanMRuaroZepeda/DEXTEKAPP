@@ -19,7 +19,7 @@ const CreateClienteScreen = ({ navigation }) => {
     }, []);
 
     const fetchBranches = () => {
-        fetch('http://192.168.1.78:3000/api/auth/sucursales')
+        fetch('http://apidextek.fragomx.com/api/auth/sucursales')
         .then(response => response.json())
         .then(data => {
             setBranches(data);
@@ -47,7 +47,7 @@ const CreateClienteScreen = ({ navigation }) => {
             id_branch
         };
 
-        fetch('http://192.168.1.78:3000/api/auth/clientnuevo', {
+        fetch('http://apidextek.fragomx.com/api/auth/clientnuevo', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

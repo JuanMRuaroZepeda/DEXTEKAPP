@@ -28,7 +28,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
   }, []);
 
   const fetchStatus = () => {
-    fetch('http://192.168.1.78:3000/api/auth/status')
+    fetch('http://apidextek.fragomx.com/api/auth/status')
       .then(response => response.json())
       .then(data => setStatus(data))
       .catch(error => {
@@ -38,7 +38,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
   };
 
   const fetchClients = () => {
-    fetch('http://192.168.1.78:3000/api/auth/clientes')
+    fetch('http://apidextek.fragomx.com/api/auth/clientes')
       .then(response => response.json())
       .then(data => setClients(data))
       .catch(error => {
@@ -48,7 +48,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
   };
 
   const fetchUsers = () => {
-    fetch('http://192.168.1.78:3000/api/auth/usersrole3')
+    fetch('http://apidextek.fragomx.com/api/auth/usersrole3')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => {
@@ -58,7 +58,7 @@ const UpdateTareaScreen = ({ route, navigation }) => {
   };
 
   const fetchProjects = () => {
-    fetch('http://192.168.1.78:3000/api/auth/proyectos')
+    fetch('http://apidextek.fragomx.com/api/auth/proyectos')
       .then(response => response.json())
       .then(data => setProjects(data))
       .catch(error => {
@@ -73,18 +73,20 @@ const UpdateTareaScreen = ({ route, navigation }) => {
       return;
     }
 
+    const formattedDeadline = `${deadline.getFullYear()}-${(deadline.getMonth() + 1).toString().padStart(2, '0')}-${deadline.getDate().toString().padStart(2, '0')} ${deadline.getHours().toString().padStart(2, '0')}:${deadline.getMinutes().toString().padStart(2, '0')}:${deadline.getSeconds().toString().padStart(2, '0')}`;
+
     setLoading(true);
     const updatedTask = {
       name_task: nameTask,
       description: description,
-      deadline: deadline.toISOString(),
+      deadline: formattedDeadline,
       id_status: idStatus,
       id_user: idUser,
       id_client: idClient,
       id_project: idProject
     };
 
-    fetch(`http://192.168.1.78:3000/api/auth/actualizartarea/${taskId}`, {
+    fetch(`http://apidextek.fragomx.com/api/auth/actualizartarea/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

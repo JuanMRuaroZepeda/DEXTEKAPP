@@ -23,7 +23,7 @@ const CreateProyectoScreen = ({ navigation }) => {
   }, []);
 
   const fetchClientes = () => {
-    fetch('http://192.168.1.78:3000/api/auth/clientes')
+    fetch('http://apidextek.fragomx.com/api/auth/clientes')
       .then(response => response.json())
       .then(data => {
         setClientes(Array.isArray(data) ? data : []);
@@ -35,7 +35,7 @@ const CreateProyectoScreen = ({ navigation }) => {
   };
 
   const fetchUsuarios = () => {
-    fetch('http://192.168.1.78:3000/api/auth/usersrole3')
+    fetch('http://apidextek.fragomx.com/api/auth/usersrole3')
       .then(response => response.json())
       .then(data => {
         setUsuarios(Array.isArray(data) ? data : []);
@@ -52,17 +52,20 @@ const CreateProyectoScreen = ({ navigation }) => {
       return;
     }
 
+    const formattedDeadline = deadline.toISOString().split('T')[0]; // For DATE field
+
+
     setLoading(true);
     const newProject = {
       name_project: nameProject,
       description: description,
-      deadline: deadline.toISOString(),
+      deadline: formattedDeadline,
       id_status: idStatus,
       id_user: idUser,
       id_client: idClient
     };
 
-    fetch('http://192.168.1.78:3000/api/auth/crearproyecto', {
+    fetch('http://apidextek.fragomx.com/api/auth/crearproyecto', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
