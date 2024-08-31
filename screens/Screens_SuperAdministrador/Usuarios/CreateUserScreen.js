@@ -20,7 +20,9 @@ const CreateUserScreen = ({ navigation }) => {
   const [idJobTitle, setIdJobTitle] = useState('');
   const [idRole, setIdRole] = useState('');
   const [idStatus, setIdStatus] = useState('');
+  const [idClient, setIdClient] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isClientRole, setIsClientRole] = useState(false);
 
   const [documents, setDocuments] = useState([]);
   const [positions, setPositions] = useState([]);
@@ -28,6 +30,7 @@ const CreateUserScreen = ({ navigation }) => {
   const [departments, setDepartments] = useState([]);
   const [contracts, setContracts] = useState([]);
   const [jobTitles, setJobTitles] = useState([]);
+  const [clients, setClients] = useState([]);
 
   useEffect(() => {
     fetchDocuments();
@@ -36,10 +39,11 @@ const CreateUserScreen = ({ navigation }) => {
     fetchDepartments();
     fetchContracts();
     fetchJobTitles();
+    fetchClients();
   }, []);
 
   const fetchDocuments = () => {
-    fetch('http://apidextek.fragomx.com/api/auth/documentos')
+    fetch('http://192.168.100.115:3000/api/auth/documentos')
       .then(response => response.json())
       .then(data => setDocuments(data))
       .catch(error => {
@@ -49,7 +53,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchPositions = () => {
-    fetch('http://apidextek.fragomx.com/api/auth/positions')
+    fetch('http://192.168.100.115:3000/api/auth/positions')
       .then(response => response.json())
       .then(data => setPositions(data))
       .catch(error => {
@@ -59,7 +63,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchBranches = () => {
-    fetch('http://apidextek.fragomx.com/api/auth/sucursales')
+    fetch('http://192.168.100.115:3000/api/auth/sucursales')
       .then(response => response.json())
       .then(data => setBranches(data))
       .catch(error => {
@@ -69,7 +73,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchDepartments = () => {
-    fetch('http://apidextek.fragomx.com/api/auth/departamentos')
+    fetch('http://192.168.100.115:3000/api/auth/departamentos')
       .then(response => response.json())
       .then(data => setDepartments(data))
       .catch(error => {
@@ -79,7 +83,7 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchContracts = () => {
-    fetch('http://apidextek.fragomx.com/api/auth/contratos')
+    fetch('http://192.168.100.115:3000/api/auth/contratos')
       .then(response => response.json())
       .then(data => setContracts(data))
       .catch(error => {
@@ -89,13 +93,23 @@ const CreateUserScreen = ({ navigation }) => {
   };
 
   const fetchJobTitles = () => {
-    fetch('http://apidextek.fragomx.com/api/auth/jobstitles')
+    fetch('http://192.168.100.115:3000/api/auth/jobstitles')
       .then(response => response.json())
       .then(data => setJobTitles(data))
       .catch(error => {
         console.error('Error fetching JobTitles:', error);
         Alert.alert('Error', 'No se pudo obtener la lista de títulos de trabajo.');
       });
+  };
+
+  const fetchClients = () => {
+    fetch('http://192.168.100.115:3000/api/auth/obtenerClientes')
+    .then(response => response.json())
+    .then(data => setClients(data))
+    .catch(error => {
+      console.error('Error fetching Clients:', error);
+      Alert.alert('Error', 'No se pudo obtener la lista de clientes.');
+    });
   };
 
   const onChangeDate = (event, selectedDate) => {
@@ -128,14 +142,32 @@ const CreateUserScreen = ({ navigation }) => {
     }
   };
 
+  const handleRoleChange = (itemValue) => {
+    setIdRole(itemValue);
+    if (itemValue === '4') {
+      setIsClientRole(true);
+      setIdClient('');
+    } else {
+      setIsClientRole(false);
+      setIdClient(null);
+    }
+  };
+
   const registerUser = async () => {
+    // Validación de campos requeridos
     if (!name || !lastname || !username || !password || !idDocument || !idPosition || !idBranch || !idDepartment || !dateStart || !idContract || !idJobTitle || !idRole || !idStatus) {
       Alert.alert('Campos incompletos', 'Por favor completa todos los campos.', [{ text: 'OK' }]);
       return;
     }
-
-    const formattedDateStart = dateStart.toISOString().split('T')[0]; // Convierte la fecha a 'YYYY-MM-DD'
   
+    // Validación específica para el rol de cliente
+    if (isClientRole && !idClient) {
+      Alert.alert('Campos incompletos', 'Por favor selecciona un Cliente para este rol.', [{ text: 'OK' }]);
+      return;
+    }
+  
+    const formattedDateStart = dateStart.toISOString().split('T')[0]; // Convierte la fecha a 'YYYY-MM-DD'
+    
     const formData = new FormData();
     formData.append('name', name);
     formData.append('lastname', lastname);
@@ -151,11 +183,15 @@ const CreateUserScreen = ({ navigation }) => {
     formData.append('id_role', idRole);
     formData.append('id_status', idStatus);
   
+    // Si no se selecciona un cliente, se establece en null
+    formData.append('id_client', isClientRole ? idClient : null);
+  
+    // Agregar documento si está seleccionado
     if (document) {
       const fileUri = document.uri;
       const fileName = document.name;
       const fileType = document.mimeType;
-  
+      
       formData.append('document', {
         uri: fileUri,
         type: fileType,
@@ -164,24 +200,24 @@ const CreateUserScreen = ({ navigation }) => {
     }
   
     try {
-      const response = await axios.post('http://apidextek.fragomx.com/api/auth/register2', formData, {
+      const response = await axios.post('http://192.168.100.115:3000/api/auth/register2', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-    
+  
       console.log(response.data); // Verifica la respuesta aquí
-    
+  
       if (response.status !== 200) {
         throw new Error(response.data.message || 'Ocurrió un error al crear el usuario');
       }
-    
+  
       Alert.alert('Usuario creado', response.data.message, [{ text: 'OK', onPress: () => navigation.goBack() }]);
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
       Alert.alert('Error', error.response ? error.response.data.message : 'No se pudo conectar con la API');
-    }    
-  };  
+    }
+  };
 
   return (
     <ImageBackground source={require('../../../assets/fondos/fondo.jpg')} style={styles.background}>
@@ -318,17 +354,34 @@ const CreateUserScreen = ({ navigation }) => {
         <Text style={styles.text}>Selecciona el Rol:</Text>
         <View style={styles.pickerContainer}>
           <Picker
-            selectedValue={idRole}
-            onValueChange={(itemValue) => setIdRole(itemValue)}
             style={styles.picker}
+            selectedValue={idRole}
+            onValueChange={handleRoleChange}
           >
-            <Picker.Item label="Seleccione una Opción" value="" />
+            <Picker.Item label="Selecciona un rol" value="" />
             <Picker.Item label="Super Administrador" value="1" />
-            <Picker.Item label="Jefe de Área" value="2" />
+            <Picker.Item label="Jefe de Area" value="2" />
             <Picker.Item label="Trabajador" value="3" />
             <Picker.Item label="Cliente" value="4" />
           </Picker>
         </View>
+        {isClientRole && (
+          <>
+            <Text style={styles.text}>Selecciona el Cliente:</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                style={styles.picker}
+                selectedValue={idClient}
+                onValueChange={(itemValue) => setIdClient(itemValue)}
+              >
+                <Picker.Item label="Selecciona un cliente" value="" />
+                {clients.map((client) => (
+                  <Picker.Item key={client.id} label={client.contac_name} value={client.id} />
+                ))}
+              </Picker>
+            </View>
+          </>
+        )}
         <Text style={styles.text}>Selecciona el Estado:</Text>
         <View style={styles.pickerContainer}>
           <Picker

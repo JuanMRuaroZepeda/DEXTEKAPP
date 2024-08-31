@@ -16,7 +16,7 @@ const ConsultarClientes = ({ navigation }) => {
 
   const fetchData = () => {
     setLoading(true);
-    fetch('http://apidextek.fragomx.com/api/auth/clientes')
+    fetch('http://192.168.100.115:3000/api/auth/clientes')
       .then(response => response.json())
       .then(clientesData => {
         setClientes(clientesData);
