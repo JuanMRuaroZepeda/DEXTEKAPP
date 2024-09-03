@@ -22,7 +22,10 @@ const UpdateUserScreen = ({ route, navigation }) => {
   const [idJobTitle, setIdJobTitle] = useState('');
   const [idRole, setIdRole] = useState('');
   const [idStatus, setIdStatus] = useState('');
+  const [idClient, setIdClient] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isClientRole, setIsClientRole] = useState(false);
+
 
   const [documents, setDocuments] = useState([]);
   const [positions, setPositions] = useState([]);
@@ -30,6 +33,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
   const [departments, setDepartments] = useState([]);
   const [contracts, setContracts] = useState([]);
   const [jobTitles, setJobTitles] = useState([]);
+  const [clients, setClients] = useState([]);
 
   useEffect(() => {
     fetchDocuments();
@@ -38,6 +42,7 @@ const UpdateUserScreen = ({ route, navigation }) => {
     fetchDepartments();
     fetchContracts();
     fetchJobTitles();
+    fetchClients();
   }, []);
 
   const fetchDocuments = async () => {
@@ -106,6 +111,16 @@ const UpdateUserScreen = ({ route, navigation }) => {
     }
   };
 
+  const fetchClients = () => {
+    fetch('http://192.168.100.115:3000/api/auth/obtenerClientes')
+    .then(response => response.json())
+    .then(data => setClients(data))
+    .catch(error => {
+      console.error('Error fetching Clients:', error);
+      Alert.alert('Error', 'No se pudo obtener la lista de clientes.');
+    });
+  };
+
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || dateStart;
     setShowDatePicker(false);
@@ -128,9 +143,26 @@ const UpdateUserScreen = ({ route, navigation }) => {
     }
   };
 
+  const handleRoleChange = (itemValue) => {
+    setIdRole(itemValue);
+    if (itemValue === '4') {
+      setIsClientRole(true);
+      setIdClient('');
+    } else {
+      setIsClientRole(false);
+      setIdClient(null);
+    }
+  };
+
   const updateUser = async () => {
     if (!name || !lastname || !username || !password || !idDocument || !idPosition || !idBranch || !idDepartment || !dateStart || !idContract || !idJobTitle || !idRole || !idStatus) {
       Alert.alert('Campos incompletos', 'Por favor completa todos los campos.', [{ text: 'OK' }]);
+      return;
+    }
+
+    // Validación específica para el rol de cliente
+    if (isClientRole && !idClient) {
+      Alert.alert('Campos incompletos', 'Por favor selecciona un Cliente para este rol.', [{ text: 'OK' }]);
       return;
     }
 
@@ -151,6 +183,9 @@ const UpdateUserScreen = ({ route, navigation }) => {
     formData.append('id_jobTitle', idJobTitle);
     formData.append('id_role', idRole);
     formData.append('id_status', idStatus);
+
+    // Si no se selecciona un cliente, se establece en null
+    formData.append('id_client', isClientRole ? idClient : null);
 
     if (document) {
       const fileUri = document.uri;
@@ -316,21 +351,37 @@ const UpdateUserScreen = ({ route, navigation }) => {
           ))}
         </Picker>
         </View>
-        <Text style={styles.text}>Rol:</Text>
+        <Text style={styles.text}>Selecciona el Rol:</Text>
         <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={idRole}
-          onValueChange={(itemValue) => setIdRole(itemValue)}
-          style={styles.picker}
-        >
-          <Picker.Item label="Seleccione un rol" value="" />
-          {/* Reemplaza con la lista real de roles */}
-          <Picker.Item label="Super Administrador" value="1" />
-            <Picker.Item label="Jefe de Área" value="2" />
+          <Picker
+            style={styles.picker}
+            selectedValue={idRole}
+            onValueChange={handleRoleChange}
+          >
+            <Picker.Item label="Selecciona un rol" value="" />
+            <Picker.Item label="Super Administrador" value="1" />
+            <Picker.Item label="Jefe de Area" value="2" />
             <Picker.Item label="Trabajador" value="3" />
             <Picker.Item label="Cliente" value="4" />
-        </Picker>
+          </Picker>
         </View>
+        {isClientRole && (
+          <>
+            <Text style={styles.text}>Selecciona el Cliente:</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                style={styles.picker}
+                selectedValue={idClient}
+                onValueChange={(itemValue) => setIdClient(itemValue)}
+              >
+                <Picker.Item label="Selecciona un cliente" value="" />
+                {clients.map((client) => (
+                  <Picker.Item key={client.id} label={client.contac_name} value={client.id} />
+                ))}
+              </Picker>
+            </View>
+          </>
+        )}
         <Text style={styles.text}>Estado:</Text>
         <View style={styles.pickerContainer}>
         <Picker
