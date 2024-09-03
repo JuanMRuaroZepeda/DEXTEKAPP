@@ -1,7 +1,7 @@
 // LoginScreen.js
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dimensions, Alert, Touchable } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, Image, Dimensions, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -13,9 +13,10 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (!username || !password) {
-      Alert.alert('Datos Incompletos','Por favor ingresa el usuario y la contraseña.');
+      Alert.alert('Datos Incompletos', 'Por favor ingresa el usuario y la contraseña.');
       return;
     }
+
     try {
       const response = await fetch('http://192.168.100.115:3000/api/auth/login2', {
         method: 'POST',
@@ -25,82 +26,62 @@ const LoginScreen = ({ navigation }) => {
         body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
-  
+
       console.log("Response data: ", data);
-  
+
       if (data.accessToken) {
         await AsyncStorage.setItem('token', data.accessToken);
-  
-        const idRole = data.id_role !== undefined ? data.id_role.toString() : null;
-        const idStatus = data.id_status !== undefined ? data.id_status.toString() : null;
-        const id = data.id !== undefined ? data.id.toString() : null;
-  
-        if (id !== null) {
-          await AsyncStorage.setItem('id', id);
-        } else {
-          await AsyncStorage.removeItem('id');
-        }
-  
-        if (idRole !== null) {
-          await AsyncStorage.setItem('role', idRole);
-        } else {
-          await AsyncStorage.removeItem('role');
-        }
-  
-        if (data.name !== undefined) {
-          await AsyncStorage.setItem('name', data.name);
-        } else {
-          await AsyncStorage.removeItem('name');
-        }
-  
-        if (data.lastname !== undefined) {
-          await AsyncStorage.setItem('lastname', data.lastname);
-        } else {
-          await AsyncStorage.removeItem('lastname');
-        }
-  
-        if (idStatus !== null) {
-          await AsyncStorage.setItem('status', idStatus);
-        } else {
-          await AsyncStorage.removeItem('status');
-        }
-  
+
+        const id = data.id?.toString() ?? '';
+        const idRole = data.id_role?.toString() ?? '';
+        const idStatus = data.id_status?.toString() ?? '';
+        const idClient = data.id_client?.toString() ?? '';
+        const name = data.name ?? '';
+        const lastname = data.lastname ?? '';
+
+        await AsyncStorage.setItem('id', id);
+        await AsyncStorage.setItem('role', idRole);
+        await AsyncStorage.setItem('name', name);
+        await AsyncStorage.setItem('lastname', lastname);
+        await AsyncStorage.setItem('status', idStatus);
+        await AsyncStorage.setItem('id_client', idClient);
+
         if (idStatus === '2') {
-          Alert.alert('Atención!','Cuenta Eliminada');
+          Alert.alert('Atención!', 'Cuenta Eliminada');
           return;
         } else if (idStatus === '3') {
-          Alert.alert('Atención!','Cuenta Suspendida');
+          Alert.alert('Atención!', 'Cuenta Suspendida');
           return;
         } else if (idStatus !== '1') {
-          Alert.alert('Atención!','Estado de cuenta no válido');
+          Alert.alert('Atención!', 'Estado de cuenta no válido');
           return;
         }
-  
+
         switch (idRole) {
           case '1':
-            navigation.navigate('SuperAdmin', { id, name: data.name, lastname: data.lastname });
+            navigation.navigate('SuperAdmin', { id, name, lastname });
             break;
           case '2':
-            navigation.navigate('AreaManager', { id, name: data.name, lastname: data.lastname });
+            navigation.navigate('AreaManager', { id, name, lastname });
             break;
           case '3':
-            navigation.navigate('Worker', { id, name: data.name, lastname: data.lastname });
+            navigation.navigate('Worker', { id, name, lastname });
             break;
           case '4':
-            navigation.navigate('Client', { id, name: data.name, lastname: data.lastname });
+            navigation.navigate('Client', { id, name, lastname, id_client: idClient });
             break;
           default:
-            Alert.alert('Atención!','Rol no reconocido');
+            Alert.alert('Atención!', 'Rol no reconocido');
         }
       } else {
-        Alert.alert('Atención!','Usuario no Encontrado');
+        Alert.alert('Atención!', 'Usuario no Encontrado');
       }
     } catch (error) {
       console.error(error);
-      Alert.alert('Error en el Servidor','Error en la conexión con la API');
+      Alert.alert('Error en el Servidor', 'Error en la conexión con la API');
     }
   };
-    
+
   return (
     <ImageBackground source={require('../assets/fondos/fondo.jpg')} style={styles.background}>
       <View style={styles.container}>

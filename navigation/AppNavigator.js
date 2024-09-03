@@ -32,6 +32,8 @@ import CMEClientesScreen from '../screens/Screens_SuperAdministrador/Clientes/CM
 import CreateClienteScreen from '../screens/Screens_SuperAdministrador/Clientes/CreateClienteScreen';
 import UpdateClienteScreen from '../screens/Screens_SuperAdministrador/Clientes/UpdateClienteScreen';
 import ConsultarClientesScreen from '../screens/Screens_SuperAdministrador/Clientes/ConsultarClientesScreen';
+import ConsultarProyectosCliente from '../screens/Screens_Client/Consultar_ProyectosClienteScreen';
+import AvanceTareas from '../screens/Screens_Client/Avance_Tareas_Screen';
 
 //Trabajador
 import ConsultarProyectosTrabajador from '../screens/Screens_Worker/Consultar_Proyectos_Screen';
@@ -202,6 +204,19 @@ const AppNavigator = () => {
           component={ClientScreen}
           options={{ title: 'Cliente', headerLeft: () => null }}
         />
+
+        <Stack.Screen
+        name="MisProyectosCliente"
+        component={ConsultarProyectosCliente}
+        options={{title: 'Mis Proyectos'}}
+        />
+
+        <Stack.Screen
+        name="AvanceTareas"
+        component={AvanceTareas}
+        options={{title: 'Avance del Proyecto'}}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
